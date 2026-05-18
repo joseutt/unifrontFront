@@ -2,15 +2,18 @@ import { useEffect, useState } from "react";
 import CarreraHeader from "../components/carreras/CarreraHeader";
 import CarreraForm from "../components/carreras/CarreraForm";
 import CarreraListCard from "../components/carreras/CarreraListCard";
+
 import {
   obtenerCarreras,
   crearCarrera,
   eliminarCarrera,
+  actualizarCarrera,
 } from "../services/carrerasService";
 
 export default function CarrerasPage() {
   const [carreras, setCarreras] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
 
   useEffect(() => {
     cargarCarreras();
@@ -28,10 +31,19 @@ export default function CarrerasPage() {
     }
   };
 
-  const handleCrear = async (formData) => {
+  const handleSubmit = async (formData) => {
     try {
-      await crearCarrera(formData);
-      cargarCarreras();
+      const payload = { ...formData };
+
+      if (carreraSeleccionada) {
+        await actualizarCarrera(carreraSeleccionada.id_carrera, payload);
+      } else {
+        await crearCarrera(payload);
+      }
+
+      await cargarCarreras();
+
+      setCarreraSeleccionada(null);
     } catch (error) {
       console.error(error);
     }
@@ -39,7 +51,10 @@ export default function CarrerasPage() {
 
   const handleEditar = (carrera) => {
     setCarreraSeleccionada(carrera);
-    setOpenModal(true);
+  };
+
+  const handleCancelarEdicion = () => {
+    setCarreraSeleccionada(null);
   };
 
   const handleEliminar = async (carrera) => {
@@ -50,6 +65,9 @@ export default function CarrerasPage() {
     try {
       await eliminarCarrera(carrera.id_carrera);
       cargarCarreras();
+      if (carreraSeleccionada?.id_carrera === carrera.id_carrera) {
+        setCarreraSeleccionada(null);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -62,7 +80,6 @@ export default function CarrerasPage() {
       </div>
     );
   }
-
   return (
     <div className="space-y-6 p-6">
       <CarreraHeader total={carreras.length} />
@@ -72,7 +89,11 @@ export default function CarrerasPage() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {/* Formulario */}
         <div className="xl:col-span-1">
-          <CarreraForm onSubmit={handleCrear} />
+          <CarreraForm
+            onSubmit={handleSubmit}
+            carrera={carreraSeleccionada}
+            onCancel={handleCancelarEdicion}
+          />
         </div>
 
         {/* Tabla */}

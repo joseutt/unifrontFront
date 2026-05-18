@@ -13,7 +13,7 @@ export const crearCarrera = async (data) => {
 };
 
 export const actualizarCarrera = async (id, data) => {
-  const response = await api.put(`/carreras/${id}`, data);
+  const response = await api.patch(`/carreras/${id}`, data);
 
   return response.data;
 };
