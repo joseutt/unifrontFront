@@ -13,7 +13,7 @@ export const crearMateria = async (data) => {
 };
 
 export const actualizarMateria = async (id, data) => {
-  const response = await api.put(`/materias/${id}`, data);
+  const response = await api.patch(`/materias/${id}`, data);
 
   return response.data;
 };
