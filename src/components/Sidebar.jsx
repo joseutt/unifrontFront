@@ -1,109 +1,74 @@
-import {
-  LayoutDashboard,
-  Users,
-  BookOpen,
-  ClipboardList,
-  Award,
-  LogOut,
-} from "lucide-react";
-
-import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+import { LogOut } from "lucide-react";
 import logo from "../assets/UnifrontLogo.png";
-
-const items = [
-  {
-    icon: LayoutDashboard,
-    label: "Panel",
-    path: "/dashboard",
-    roles: ["ADMIN", "DOCENTE"],
-  },
-
-  {
-    icon: Users,
-    label: "Alumnos",
-    path: "/alumnos",
-    roles: ["ADMIN"],
-  },
-
-  {
-    icon: BookOpen,
-    label: "Plan de estudios",
-    path: "/planes-estudio",
-    roles: ["ADMIN", "DOCENTE"],
-  },
-
-  {
-    icon: ClipboardList,
-    label: "Captura",
-    path: "/captura",
-    roles: ["DOCENTE"],
-  },
-
-  {
-    icon: Award,
-    label: "Cuadro de honor",
-    path: "/cuadro-honor",
-    roles: ["ADMIN"],
-  },
-];
+import { sidebarSections } from "../config/sidebarSections";
+import SidebarSection from "./sidebar/SidebarSection";
 
 function Sidebar() {
   const { logout, user } = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
+  const [openSections, setOpenSections] = useState({
+    General: true,
+    Académico: true,
+    Escolar: true,
+    Docentes: true,
+    Administración: true,
+  });
+
+  const toggleSection = (title) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   const handleLogout = () => {
     logout();
+
     navigate("/");
   };
 
   return (
-    <aside className="w-64 bg-[var(--sidebar)] text-[var(--sidebar-foreground)] min-h-screen p-4 flex flex-col">
+    <aside className="flex min-h-screen w-72 flex-col bg-[var(--sidebar)] p-4 text-[var(--sidebar-foreground)]">
       {/* Logo */}
-      <div className="flex justify-center bg-[var(--primary)] p-3 rounded-xl">
-        <img src={logo} alt="Logo Unifront" height={24} />
+      <div className="rounded-2xl bg-[var(--primary)] p-4 shadow-lg">
+        <div className="flex justify-center">
+          <img src={logo} alt="Logo Unifront" className="h-14 object-contain" />
+        </div>
       </div>
 
-      <div className="flex items-center gap-3 mb-10"></div>
-
       {/* Navigation */}
-      <nav className="space-y-2 flex-1">
-        {items
-          .filter((item) =>
+      <nav className="mt-8 flex-1 space-y-6 overflow-y-auto">
+        {sidebarSections.map((section) => {
+          const visibles = section.items.filter((item) =>
             item.roles.some((role) =>
               user?.roles?.some((userRole) => userRole.nombre === role),
             ),
-          )
-          .map((item) => {
-            const Icon = item.icon;
+          );
 
-            const isActive = location.pathname === item.path;
+          if (visibles.length === 0) return null;
 
-            return (
-              <button
-                key={item.label}
-                onClick={() => navigate(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                  isActive
-                    ? "bg-[var(--primary)] text-white"
-                    : "hover:bg-[var(--sidebar-accent)]"
-                }`}
-              >
-                <Icon size={18} />
-
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
+          return (
+            <SidebarSection
+              key={section.title}
+              section={section}
+              visibles={visibles}
+              isOpen={openSections[section.title]}
+              onToggle={() => toggleSection(section.title)}
+              pathname={location.pathname}
+              navigate={navigate}
+            />
+          );
+        })}
       </nav>
 
       {/* Logout */}
       <button
         onClick={handleLogout}
-        className="mt-6 w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 text-red-300 hover:bg-red-500/20 transition"
+        className="mt-6 flex w-full items-center gap-3 rounded-xl bg-red-500/10 px-4 py-3 text-red-300 transition hover:bg-red-500/20"
       >
         <LogOut size={18} />
 

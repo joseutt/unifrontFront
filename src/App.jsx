@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import PlanesEstudioPage from "./pages/PlanesEstudioPage";
+import CarrerasPage from "./pages/CarrerasPage";
+import MateriasPage from "./pages/MateriasPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
@@ -27,7 +29,7 @@ function App() {
         {/* Login */}
         <Route path="/" element={<Login />} />
 
-        {/* Rutas protegidas */}
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -39,6 +41,31 @@ function App() {
           }
         />
 
+        {/* Carreras */}
+        <Route
+          path="/carreras"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <CarrerasPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Materias */}
+        <Route
+          path="/materias"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <MateriasPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Planes */}
         <Route
           path="/planes-estudio"
           element={
@@ -50,6 +77,7 @@ function App() {
           }
         />
 
+        {/* Alumnos */}
         <Route
           path="/alumnos"
           element={
@@ -61,6 +89,7 @@ function App() {
           }
         />
 
+        {/* Captura */}
         <Route
           path="/captura"
           element={
@@ -72,6 +101,7 @@ function App() {
           }
         />
 
+        {/* Cuadro honor */}
         <Route
           path="/cuadro-honor"
           element={
