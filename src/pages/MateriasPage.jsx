@@ -2,14 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import MateriaHeader from "../components/materias/MateriaHeader";
 import MateriaForm from "../components/materias/MateriaForm";
 import MateriaListCard from "../components/materias/MateriaListCard";
+import MateriaModal from "../components/materias/MateriaModal";
 
 import {
   obtenerMaterias,
   crearMateria,
   eliminarMateria,
+  actualizarMateria,
 } from "../services/materiasService";
 
 import { obtenerCarreras } from "../services/carrerasService";
+
+const normalizarTexto = (texto) => {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
 
 export default function MateriasPage() {
   const [materias, setMaterias] = useState([]);
@@ -17,6 +23,8 @@ export default function MateriasPage() {
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState("");
   const [carreraFiltro, setCarreraFiltro] = useState("TODAS");
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [materiaEditando, setMateriaEditando] = useState(null);
 
   useEffect(() => {
     cargarDatos();
@@ -42,10 +50,16 @@ export default function MateriasPage() {
   };
 
   const materiasFiltradas = useMemo(() => {
+    const busquedaNormalizada = normalizarTexto(busqueda.toLowerCase());
+
     return materias.filter((materia) => {
       const coincideBusqueda =
-        materia.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        materia.clave.toLowerCase().includes(busqueda.toLowerCase());
+        normalizarTexto(materia.nombre.toLowerCase()).includes(
+          busquedaNormalizada,
+        ) ||
+        normalizarTexto(materia.clave.toLowerCase()).includes(
+          busquedaNormalizada,
+        );
 
       const coincideCarrera =
         carreraFiltro === "TODAS" ||
@@ -63,6 +77,28 @@ export default function MateriasPage() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleEditar = (materia) => {
+    setMateriaEditando(materia);
+    setModalAbierto(true);
+  };
+
+  const handleSubmitModal = async (formData) => {
+    try {
+      await actualizarMateria(materiaEditando.id_materia, formData);
+
+      setModalAbierto(false);
+      setMateriaEditando(null);
+      cargarDatos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCerrarModal = () => {
+    setModalAbierto(false);
+    setMateriaEditando(null);
   };
 
   const handleEliminar = async (materia) => {
@@ -108,10 +144,18 @@ export default function MateriasPage() {
             setBusqueda={setBusqueda}
             carreraFiltro={carreraFiltro}
             setCarreraFiltro={setCarreraFiltro}
+            onEditar={handleEditar}
             onEliminar={handleEliminar}
           />
         </div>
       </div>
+
+      <MateriaModal
+        open={modalAbierto}
+        onClose={handleCerrarModal}
+        onSubmit={handleSubmitModal}
+        materia={materiaEditando}
+      />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function MateriaForm({ materia, onSubmit }) {
   const [form, setForm] = useState({
@@ -7,6 +7,15 @@ export default function MateriaForm({ materia, onSubmit }) {
     creditos: materia?.creditos || "",
     estado: materia?.estado ?? true,
   });
+
+  useEffect(() => {
+    setForm({
+      clave: materia?.clave || "",
+      nombre: materia?.nombre || "",
+      creditos: materia?.creditos || "",
+      estado: materia?.estado ?? true,
+    });
+  }, [materia]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -28,7 +37,9 @@ export default function MateriaForm({ materia, onSubmit }) {
 
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">Nueva materia</h2>
+      <h2 className="text-xl font-semibold text-slate-900">
+        {materia ? "Editar materia" : "Nueva materia"}
+      </h2>
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         <div>
           <label className="mb-1 block text-sm font-medium text-slate-700">
@@ -42,6 +53,7 @@ export default function MateriaForm({ materia, onSubmit }) {
             onChange={handleChange}
             className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
             placeholder="Ej: INF101"
+            required
           />
         </div>
 
@@ -57,6 +69,7 @@ export default function MateriaForm({ materia, onSubmit }) {
             onChange={handleChange}
             className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
             placeholder="Nombre de la materia"
+            required
           />
         </div>
 
@@ -67,12 +80,14 @@ export default function MateriaForm({ materia, onSubmit }) {
 
           <input
             type="number"
-            step="0.1"
+            step="0.01"
             name="creditos"
             value={form.creditos}
             onChange={handleChange}
             className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
             placeholder="0"
+            min={0.1}
+            required
           />
         </div>
 
@@ -90,9 +105,9 @@ export default function MateriaForm({ materia, onSubmit }) {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="rounded-xl bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
+            className="rounded-xl px-6 py-3 font-medium text-white transition hover:bg-blue-700 bg-[#0B245B]"
           >
-            Guardar materia
+            {materia ? "Actualizar materia" : "Guardar materia"}
           </button>
         </div>
       </form>
