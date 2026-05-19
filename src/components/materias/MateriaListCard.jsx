@@ -1,4 +1,4 @@
-import { Search, Trash2, BookOpen } from "lucide-react";
+import { Search, Trash2, BookOpen, Edit2 } from "lucide-react";
 import MateriaFilters from "./MateriaFilters";
 
 export default function MateriaListCard({
@@ -8,6 +8,7 @@ export default function MateriaListCard({
   setBusqueda,
   carreraFiltro,
   setCarreraFiltro,
+  onEditar,
   onEliminar,
 }) {
   return (
@@ -67,7 +68,14 @@ export default function MateriaListCard({
               <td className="px-6 py-5 text-center">{materia.creditos}</td>
 
               <td className="px-6 py-5">
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={() => onEditar(materia)}
+                    className="text-blue-500 transition hover:text-blue-700"
+                  >
+                    <Edit2 size={18} />
+                  </button>
+
                   <button
                     onClick={() => onEliminar(materia)}
                     className="text-red-500 transition hover:text-red-700"
