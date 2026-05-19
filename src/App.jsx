@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import PlanesEstudioPage from "./pages/PlanesEstudioPage";
 import CarrerasPage from "./pages/CarrerasPage";
 import MateriasPage from "./pages/MateriasPage";
+import ConstanciaEstudios from "./pages/ConstanciaEstudios";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
@@ -108,6 +109,18 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <CuadroHonorPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Constancias */}
+        <Route
+          path="/constancias"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ConstanciaEstudios />
               </MainLayout>
             </ProtectedRoute>
           }

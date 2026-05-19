@@ -18,7 +18,7 @@ export const sidebarSections = [
         icon: LayoutDashboard,
         label: "Panel",
         path: "/dashboard",
-        roles: ["ADMIN", "DOCENTE"],
+        roles: ["ADMIN", "DOCENTE", "CONTROL_ESCOLAR"],
       },
     ],
   },
@@ -92,6 +92,19 @@ export const sidebarSections = [
         label: "Usuarios",
         path: "/usuarios",
         roles: ["ADMIN"],
+      },
+    ],
+  },
+
+  {
+    title: "Documentos",
+
+    items: [
+      {
+        icon: Users,
+        label: "Constancias de estudio",
+        path: "/constancias",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
       },
     ],
   },
