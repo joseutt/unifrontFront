@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CarreraHeader from "../components/carreras/CarreraHeader";
 import CarreraForm from "../components/carreras/CarreraForm";
 import CarreraListCard from "../components/carreras/CarreraListCard";
+import CarreraModal from "../components/carreras/CarreraModal";
 
 import {
   obtenerCarreras,
@@ -13,15 +14,11 @@ import {
 export default function CarrerasPage() {
   const [carreras, setCarreras] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [carreraEditando, setCarreraEditando] = useState(null);
 
-  useEffect(() => {
-    cargarCarreras();
-  }, []);
-
-  const cargarCarreras = async () => {
+  async function cargarCarreras() {
     try {
-      setLoading(true);
       const response = await obtenerCarreras();
       setCarreras(response);
     } catch (error) {
@@ -29,32 +26,61 @@ export default function CarrerasPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleSubmit = async (formData) => {
+  useEffect(() => {
+    let activo = true;
+
+    obtenerCarreras()
+      .then((response) => {
+        if (activo) {
+          setCarreras(response);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        if (activo) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      activo = false;
+    };
+  }, []);
+
+  const handleCrear = async (formData) => {
     try {
-      const payload = { ...formData };
-
-      if (carreraSeleccionada) {
-        await actualizarCarrera(carreraSeleccionada.id_carrera, payload);
-      } else {
-        await crearCarrera(payload);
-      }
-
+      await crearCarrera(formData);
       await cargarCarreras();
-
-      setCarreraSeleccionada(null);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleEditar = (carrera) => {
-    setCarreraSeleccionada(carrera);
+    setCarreraEditando(carrera);
+    setModalAbierto(true);
   };
 
-  const handleCancelarEdicion = () => {
-    setCarreraSeleccionada(null);
+  const handleSubmitModal = async (formData) => {
+    try {
+      await actualizarCarrera(carreraEditando.id_carrera, formData);
+
+      setModalAbierto(false);
+      setCarreraEditando(null);
+
+      await cargarCarreras();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCerrarModal = () => {
+    setModalAbierto(false);
+    setCarreraEditando(null);
   };
 
   const handleEliminar = async (carrera) => {
@@ -64,9 +90,10 @@ export default function CarrerasPage() {
 
     try {
       await eliminarCarrera(carrera.id_carrera);
-      cargarCarreras();
-      if (carreraSeleccionada?.id_carrera === carrera.id_carrera) {
-        setCarreraSeleccionada(null);
+      await cargarCarreras();
+
+      if (carreraEditando?.id_carrera === carrera.id_carrera) {
+        handleCerrarModal();
       }
     } catch (error) {
       console.error(error);
@@ -80,6 +107,7 @@ export default function CarrerasPage() {
       </div>
     );
   }
+
   return (
     <div className="space-y-6 p-6">
       <CarreraHeader total={carreras.length} />
@@ -89,11 +117,7 @@ export default function CarrerasPage() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {/* Formulario */}
         <div className="xl:col-span-1">
-          <CarreraForm
-            onSubmit={handleSubmit}
-            carrera={carreraSeleccionada}
-            onCancel={handleCancelarEdicion}
-          />
+          <CarreraForm onSubmit={handleCrear} />
         </div>
 
         {/* Tabla */}
@@ -105,6 +129,13 @@ export default function CarrerasPage() {
           />
         </div>
       </div>
+
+      <CarreraModal
+        open={modalAbierto}
+        onClose={handleCerrarModal}
+        onSubmit={handleSubmitModal}
+        carrera={carreraEditando}
+      />
     </div>
   );
 }

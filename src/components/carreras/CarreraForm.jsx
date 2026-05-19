@@ -1,36 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus, Pencil, X } from "lucide-react";
 
-export default function CarreraForm({ onSubmit, carrera, onCancel }) {
-  const [form, setForm] = useState({
-    clave: "",
-    nombre: "",
-    nivel: "LICENCIATURA",
-    duracion_cuatrimestres: 9,
-    estado: true,
-  });
+const getInitialForm = (carrera) => ({
+  clave: carrera?.clave || "",
+  nombre: carrera?.nombre || "",
+  nivel: carrera?.nivel || "LICENCIATURA",
+  duracion_cuatrimestres: carrera?.duracion_cuatrimestres || 9,
+  estado: carrera?.estado ?? true,
+});
+
+export default function CarreraForm({
+  onSubmit,
+  carrera,
+  onCancel,
+  showHeader = true,
+}) {
+  const [form, setForm] = useState(() => getInitialForm(carrera));
 
   const isEditing = !!carrera;
-
-  useEffect(() => {
-    if (carrera) {
-      setForm({
-        clave: carrera.clave || "",
-        nombre: carrera.nombre || "",
-        nivel: carrera.nivel || "LICENCIATURA",
-        duracion_cuatrimestres: carrera.duracion_cuatrimestres || 9,
-        estado: carrera.estado ?? true,
-      });
-    } else {
-      setForm({
-        clave: "",
-        nombre: "",
-        nivel: "LICENCIATURA",
-        duracion_cuatrimestres: 9,
-        estado: true,
-      });
-    }
-  }, [carrera]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,34 +34,41 @@ export default function CarreraForm({ onSubmit, carrera, onCancel }) {
     await onSubmit(form);
 
     if (!isEditing) {
-      setForm({
-        clave: "",
-        nombre: "",
-        nivel: "LICENCIATURA",
-        duracion_cuatrimestres: 9,
-        estado: true,
-      });
+      setForm(getInitialForm());
     }
   };
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-slate-900">
-          {isEditing ? "Editar carrera" : "Nueva carrera"}
-        </h2>
+    <div
+      className={
+        showHeader
+          ? "rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+          : ""
+      }
+    >
+      {showHeader && (
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-slate-900">
+            {isEditing ? "Editar carrera" : "Nueva carrera"}
+          </h2>
 
-        {isEditing && (
-          <button
-            onClick={onCancel}
-            className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
-          >
-            <X size={18} />
-          </button>
-        )}
-      </div>
+          {isEditing && onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              aria-label="Cancelar edicion"
+              className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+            >
+              <X size={18} />
+            </button>
+          )}
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+      <form
+        onSubmit={handleSubmit}
+        className={showHeader ? "mt-6 space-y-5" : "space-y-5"}
+      >
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
             Clave
@@ -154,7 +148,7 @@ export default function CarreraForm({ onSubmit, carrera, onCancel }) {
             {isEditing ? "Actualizar carrera" : "Agregar carrera"}
           </button>
 
-          {isEditing && (
+          {isEditing && onCancel && (
             <button
               type="button"
               onClick={onCancel}

@@ -26,14 +26,8 @@ export default function MateriasPage() {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [materiaEditando, setMateriaEditando] = useState(null);
 
-  useEffect(() => {
-    cargarDatos();
-  }, []);
-
-  const cargarDatos = async () => {
+  async function cargarDatos() {
     try {
-      setLoading(true);
-
       const [materiasResponse, carrerasResponse] = await Promise.all([
         obtenerMaterias(),
         obtenerCarreras(),
@@ -47,7 +41,31 @@ export default function MateriasPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    let activo = true;
+
+    Promise.all([obtenerMaterias(), obtenerCarreras()])
+      .then(([materiasResponse, carrerasResponse]) => {
+        if (activo) {
+          setMaterias(materiasResponse);
+          setCarreras(carrerasResponse);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        if (activo) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   const materiasFiltradas = useMemo(() => {
     const busquedaNormalizada = normalizarTexto(busqueda.toLowerCase());
@@ -73,7 +91,7 @@ export default function MateriasPage() {
     try {
       await crearMateria(formData);
 
-      cargarDatos();
+      await cargarDatos();
     } catch (error) {
       console.error(error);
     }
@@ -90,7 +108,8 @@ export default function MateriasPage() {
 
       setModalAbierto(false);
       setMateriaEditando(null);
-      cargarDatos();
+
+      await cargarDatos();
     } catch (error) {
       console.error(error);
     }
@@ -109,7 +128,11 @@ export default function MateriasPage() {
     try {
       await eliminarMateria(materia.id_materia);
 
-      cargarDatos();
+      await cargarDatos();
+
+      if (materiaEditando?.id_materia === materia.id_materia) {
+        handleCerrarModal();
+      }
     } catch (error) {
       console.error(error);
     }

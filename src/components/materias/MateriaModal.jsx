@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import MateriaForm from "./MateriaForm";
 
 export default function MateriaModal({ open, onClose, onSubmit, materia }) {
@@ -12,14 +13,22 @@ export default function MateriaModal({ open, onClose, onSubmit, materia }) {
           </h2>
 
           <button
+            type="button"
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-700"
+            aria-label="Cerrar modal"
+            className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
           >
-            ✕
+            <X size={20} />
           </button>
         </div>
 
-        <MateriaForm materia={materia} onSubmit={onSubmit} />
+        <MateriaForm
+          key={materia?.id_materia ?? "nueva"}
+          materia={materia}
+          onSubmit={onSubmit}
+          onCancel={onClose}
+          showHeader={false}
+        />
       </div>
     </div>
   );
