@@ -11,26 +11,31 @@ export default function PlanesEstudioPage() {
   const [planSeleccionado, setPlanSeleccionado] = useState(null);
 
   useEffect(() => {
-    cargarPlanes();
+    let activo = true;
+
+    obtenerPlanesEstudio()
+      .then((response) => {
+        if (activo) {
+          setPlanes(response);
+
+          if (response.length > 0) {
+            setPlanSeleccionado(response[0].id_plan);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error cargando planes:", error);
+      })
+      .finally(() => {
+        if (activo) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      activo = false;
+    };
   }, []);
-
-  const cargarPlanes = async () => {
-    try {
-      setLoading(true);
-
-      const response = await obtenerPlanesEstudio();
-
-      setPlanes(response);
-
-      if (response.length > 0) {
-        setPlanSeleccionado(response[0].id_plan);
-      }
-    } catch (error) {
-      console.error("Error cargando planes:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const planActual = useMemo(() => {
     return planes.find((plan) => plan.id_plan === Number(planSeleccionado));

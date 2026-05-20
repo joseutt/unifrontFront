@@ -5,6 +5,7 @@ import PlanesEstudioPage from "./pages/PlanesEstudioPage";
 import CarrerasPage from "./pages/CarrerasPage";
 import MateriasPage from "./pages/MateriasPage";
 import ConstanciaEstudios from "./pages/ConstanciaEstudios";
+import UsuariosPage from "./pages/UsuariosPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
@@ -109,6 +110,18 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <CuadroHonorPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Usuarios */}
+        <Route
+          path="/usuarios"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <UsuariosPage />
               </MainLayout>
             </ProtectedRoute>
           }
