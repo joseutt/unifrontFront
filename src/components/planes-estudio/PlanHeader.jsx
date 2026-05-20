@@ -1,3 +1,5 @@
+import { Plus } from "lucide-react";
+
 export default function PlanHeader({ onCrearPlan, totalPlanes }) {
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white shadow-lg lg:flex-row lg:items-center lg:justify-between">
@@ -16,9 +18,10 @@ export default function PlanHeader({ onCrearPlan, totalPlanes }) {
 
         <button
           onClick={onCrearPlan}
-          className="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
         >
-          + Nuevo plan
+          <Plus size={18} />
+          Nuevo plan
         </button>
       </div>
     </div>

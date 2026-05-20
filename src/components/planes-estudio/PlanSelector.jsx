@@ -7,7 +7,7 @@ export default function PlanSelector({ planes, value, onChange }) {
     >
       {planes.map((plan) => (
         <option key={plan.id_plan} value={plan.id_plan}>
-          {plan.carrera.nombre}
+          {plan.nombre_plan} - {plan.carrera.nombre}
         </option>
       ))}
     </select>

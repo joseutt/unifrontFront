@@ -1,4 +1,6 @@
-export default function MateriaItem({ materiaPlan }) {
+import { Edit2, Trash2 } from "lucide-react";
+
+export default function MateriaItem({ materiaPlan, onEditar, onEliminar }) {
   const { materia, obligatoria } = materiaPlan;
 
   return (
@@ -19,6 +21,28 @@ export default function MateriaItem({ materiaPlan }) {
         <div className="whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 py-1 text-sm font-semibold text-slate-700 shadow-sm">
           {materia.creditos} cr.
         </div>
+      </div>
+
+      <div className="mt-4 flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={onEditar}
+          aria-label="Editar materia del plan"
+          title="Editar materia"
+          className="text-blue-500 transition hover:text-blue-700"
+        >
+          <Edit2 size={18} />
+        </button>
+
+        <button
+          type="button"
+          onClick={onEliminar}
+          aria-label="Eliminar materia del plan"
+          title="Eliminar materia"
+          className="text-red-500 transition hover:text-red-700"
+        >
+          <Trash2 size={18} />
+        </button>
       </div>
     </div>
   );
