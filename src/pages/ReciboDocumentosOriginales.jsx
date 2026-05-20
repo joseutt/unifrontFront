@@ -1,28 +1,170 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Download, FileText } from "lucide-react";
-import logoUnifront from "../assets/UnifrontLogo.png";
+import logoUnifront from "../assets/UnifrontLogoColorSinFondo.png";
+import { obtenerCarreras } from "../services/carrerasService";
+import {
+  obtenerAlumnos,
+  obtenerDocumentosAlumno,
+} from "../services/documentosAlumnoService";
+import { obtenerUsuarios } from "../services/usuariosService";
 
 const documentosIniciales = [
-  "FICHA DE INSCRIPCION",
-  "ACTA DE NACIMIENTO ORIGINAL Y DOS COPIAS",
-  "CERTIFICADO PREPARATORIA ORIGINAL",
-  "CONSTANCIA DE TERMINACION DE ESTUDIOS",
-  "FOTOGRAFIAS",
-  "CURP",
+  {
+    key: "ficha",
+    label: "FICHA DE INSCRIPCION",
+    recibido: true,
+    coincide: (texto) => texto.includes("ficha"),
+  },
+  {
+    key: "acta",
+    label: "ACTA DE NACIMIENTO ORIGINAL Y DOS COPIAS",
+    recibido: true,
+    coincide: (texto) => texto.includes("acta") && texto.includes("nacimiento"),
+  },
+  {
+    key: "certificado",
+    label: "CERTIFICADO PREPARATORIA ORIGINAL",
+    recibido: true,
+    coincide: (texto) => texto.includes("certificado"),
+  },
+  {
+    key: "constancia",
+    label: "CONSTANCIA DE TERMINACION DE ESTUDIOS",
+    recibido: true,
+    coincide: (texto) => texto.includes("constancia"),
+  },
+  {
+    key: "fotografias",
+    label: "FOTOGRAFIAS",
+    recibido: true,
+    coincide: (texto) => texto.includes("fotografia") || texto.includes("foto"),
+  },
+  {
+    key: "curp",
+    label: "CURP",
+    recibido: true,
+    coincide: (texto) => texto.includes("curp"),
+  },
 ];
 
+const normalizar = (value = "") =>
+  value
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+const clonarDocumentosIniciales = () =>
+  documentosIniciales.map(({ key, label, recibido }) => ({
+    key,
+    label,
+    recibido,
+  }));
+
+const nombreCompleto = (usuario) =>
+  [
+    usuario?.nombre,
+    usuario?.apellido_paterno,
+    usuario?.apellido_materno,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
 const initialForm = {
+  idAlumno: "",
   dia: "",
   mes: "",
   anio: "",
   nombreAlumno: "",
   licenciatura: "",
   observaciones: "",
-  documentos: documentosIniciales,
+  documentos: clonarDocumentosIniciales(),
 };
 
 export default function ReciboDocumentosOriginales() {
   const [form, setForm] = useState(initialForm);
+  const [alumnos, setAlumnos] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [carreras, setCarreras] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingDocumentos, setLoadingDocumentos] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let activo = true;
+
+    const cargarDatos = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const [alumnosResponse, usuariosResponse, carrerasResponse] =
+          await Promise.all([
+            obtenerAlumnos(),
+            obtenerUsuarios(),
+            obtenerCarreras(),
+          ]);
+
+        if (!activo) return;
+
+        setAlumnos(alumnosResponse);
+        setUsuarios(usuariosResponse);
+        setCarreras(carrerasResponse);
+      } catch (requestError) {
+        console.error(requestError);
+
+        if (activo) {
+          setError("No se pudo cargar la lista de alumnos.");
+        }
+      } finally {
+        if (activo) {
+          setLoading(false);
+        }
+      }
+    };
+
+    cargarDatos();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
+
+  const usuariosPorId = useMemo(
+    () => new Map(usuarios.map((usuario) => [usuario.id_usuario, usuario])),
+    [usuarios],
+  );
+
+  const carrerasPorId = useMemo(
+    () => new Map(carreras.map((carrera) => [carrera.id_carrera, carrera])),
+    [carreras],
+  );
+
+  const alumnosDetalle = useMemo(() => {
+    return alumnos
+      .map((alumno) => {
+        const usuario = usuariosPorId.get(alumno.id_usuario);
+        const carrera = carrerasPorId.get(alumno.id_carrera);
+        const nombre =
+          alumno.nombre || nombreCompleto(usuario) || `Alumno #${alumno.id_alumno}`;
+
+        return {
+          ...alumno,
+          nombre,
+          carrera,
+        };
+      })
+      .sort((a, b) => a.nombre.localeCompare(b.nombre));
+  }, [alumnos, carrerasPorId, usuariosPorId]);
+
+  const documentosPreview = useMemo(() => {
+    if (!form.idAlumno) return form.documentos;
+
+    const recibidos = form.documentos.filter((documento) => documento.recibido);
+
+    return recibidos.length > 0 ? recibidos : form.documentos;
+  }, [form.documentos, form.idAlumno]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -36,13 +178,97 @@ export default function ReciboDocumentosOriginales() {
   const handleDocumentoChange = (index, value) => {
     setForm((currentForm) => {
       const documentos = [...currentForm.documentos];
-      documentos[index] = value;
+      documentos[index] = {
+        ...documentos[index],
+        label: value,
+      };
 
       return {
         ...currentForm,
         documentos,
       };
     });
+  };
+
+  const handleDocumentoToggle = (index, checked) => {
+    setForm((currentForm) => {
+      const documentos = [...currentForm.documentos];
+      documentos[index] = {
+        ...documentos[index],
+        recibido: checked,
+      };
+
+      return {
+        ...currentForm,
+        documentos,
+      };
+    });
+  };
+
+  const handleAlumnoChange = async (event) => {
+    const idAlumno = event.target.value;
+    const alumno = alumnosDetalle.find(
+      (item) => Number(item.id_alumno) === Number(idAlumno),
+    );
+
+    setForm((currentForm) => ({
+      ...currentForm,
+      idAlumno,
+      nombreAlumno: alumno?.nombre || "",
+      licenciatura: alumno?.carrera?.nombre || "",
+      observaciones: "",
+      documentos: clonarDocumentosIniciales().map((documento) => ({
+        ...documento,
+        recibido: !idAlumno,
+      })),
+    }));
+
+    if (!idAlumno) return;
+
+    setLoadingDocumentos(true);
+    setError("");
+
+    try {
+      const documentosAlumno = await obtenerDocumentosAlumno({
+        alumno_id: idAlumno,
+      });
+      const alumnoDocumento = documentosAlumno[0]?.alumno;
+      const observaciones = documentosAlumno
+        .map((documento) => documento.observaciones)
+        .filter(Boolean)
+        .join(" | ");
+
+      setForm((currentForm) => ({
+        ...currentForm,
+        nombreAlumno: alumnoDocumento?.nombre || alumno?.nombre || "",
+        documentos: documentosIniciales.map((documentoBase) => {
+          const recibido = documentosAlumno.some((documentoAlumno) => {
+            const texto = normalizar(
+              [
+                documentoAlumno.tipo_documento?.nombre,
+                documentoAlumno.nombre_archivo,
+              ]
+                .filter(Boolean)
+                .join(" "),
+            );
+
+            return documentoBase.coincide(texto);
+          });
+
+          return {
+            key: documentoBase.key,
+            label: documentoBase.label,
+            recibido,
+          };
+        }),
+        observaciones,
+      }));
+    } catch (requestError) {
+      console.error(requestError);
+      setError("No se pudieron cargar los documentos del alumno.");
+    } finally {
+      setLoadingDocumentos(false);
+    }
   };
 
   const handleDownload = () => {
@@ -79,15 +305,18 @@ export default function ReciboDocumentosOriginales() {
           .recibo-marco {
             position: relative;
             min-height: 10.44in;
-            padding: 0.64in 0.48in 0.28in;
+            padding: 1.52in 0.48in 0.28in;
             border: 7px solid #0d4354;
           }
 
           .recibo-logo {
             display: block;
-            width: 2.65in;
+            position: absolute;
+            top: 0.68in;
+            right: 0.33in;
+            width: 2.35in;
             height: auto;
-            margin: 0.0in 0.35in 0.48in auto;
+            margin: 0;
           }
 
           .recibo-institucion {
@@ -279,6 +508,35 @@ export default function ReciboDocumentosOriginales() {
           </h2>
 
           <div className="mt-5 space-y-4">
+            {error && (
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                {error}
+              </div>
+            )}
+
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">
+                Alumno
+              </span>
+              <select
+                name="idAlumno"
+                value={form.idAlumno}
+                onChange={handleAlumnoChange}
+                disabled={loading}
+                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
+              >
+                <option value="">
+                  {loading ? "Cargando alumnos..." : "Selecciona un alumno"}
+                </option>
+                {alumnosDetalle.map((alumno) => (
+                  <option key={alumno.id_alumno} value={alumno.id_alumno}>
+                    {alumno.nombre}
+                    {alumno.matricula ? ` - ${alumno.matricula}` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               {[
                 ["dia", "Dia"],
@@ -324,19 +582,44 @@ export default function ReciboDocumentosOriginales() {
             </label>
 
             <div>
-              <h3 className="text-sm font-semibold text-slate-700">
-                Documentos
-              </h3>
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-sm font-semibold text-slate-700">
+                  Documentos
+                </h3>
+                {loadingDocumentos && (
+                  <span className="text-xs font-semibold text-blue-600">
+                    Consultando documentos...
+                  </span>
+                )}
+              </div>
               <div className="mt-2 space-y-2">
                 {form.documentos.map((documento, index) => (
-                  <input
-                    key={index}
-                    value={documento}
-                    onChange={(event) =>
-                      handleDocumentoChange(index, event.target.value)
-                    }
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  />
+                  <div
+                    key={documento.key}
+                    className={`rounded-xl border px-3 py-2 ${
+                      documento.recibido
+                        ? "border-emerald-200 bg-emerald-50"
+                        : "border-slate-200 bg-white"
+                    }`}
+                  >
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={documento.recibido}
+                        onChange={(event) =>
+                          handleDocumentoToggle(index, event.target.checked)
+                        }
+                        className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <input
+                        value={documento.label}
+                        onChange={(event) =>
+                          handleDocumentoChange(index, event.target.value)
+                        }
+                        className="w-full bg-transparent text-sm font-semibold outline-none"
+                      />
+                    </label>
+                  </div>
                 ))}
               </div>
             </div>
@@ -405,8 +688,8 @@ export default function ReciboDocumentosOriginales() {
               </p>
 
               <ul className="recibo-lista">
-                {form.documentos.map((documento, index) => (
-                  <li key={index}>{documento}</li>
+                {documentosPreview.map((documento) => (
+                  <li key={documento.key}>{documento.label}</li>
                 ))}
               </ul>
 
@@ -429,7 +712,9 @@ export default function ReciboDocumentosOriginales() {
                 </div>
 
                 <div className="recibo-firma">
+                     
                   <div className="recibo-firma-linea" />
+                  {lineValue(form.nombreAlumno)}
                   <p>NOMBRE Y FIRMA</p>
                 </div>
               </section>
