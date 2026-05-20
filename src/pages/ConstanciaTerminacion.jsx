@@ -5,16 +5,14 @@ import logoUnifront from "../assets/UnifrontLogo.png";
 const initialForm = {
   sexo: "hombre",
   nombreAlumno: "",
-  matricula: "",
-  carrera: "",
-  planEstudios: "",
+  carrera: "Licenciatura en Criminologia",
+  fechaInicioEstudios: "2007-10-04",
+  fechaFinEstudios: "2010-09-20",
   departamento: "Control Escolar",
-  asunto: "Constancia de Estudios",
-  horario: "lunes a viernes",
-  periodoVacacional: "acuerdo al calendario escolar vigente",
+  asunto: "Constancia de Terminación",
   fechaEmision: new Date().toISOString().slice(0, 10),
   ciudad: "Tijuana",
-  estado: "B.C.",
+  estado: "Baja California",
   director: "MTRA. MARIA DEL CARMEN GONZALEZ",
   cargoDirector: "DIRECTORA GENERAL",
   campus: "Campus Los Alamos",
@@ -27,14 +25,10 @@ const initialForm = {
 const textosPorSexo = {
   hombre: {
     alumno: "el alumno",
-    alumnoCapitalizado: "El alumno",
-    inscrito: "inscrito",
     peticion: "del interesado",
   },
   mujer: {
     alumno: "la alumna",
-    alumnoCapitalizado: "La alumna",
-    inscrito: "inscrita",
     peticion: "de la interesada",
   },
 };
@@ -49,11 +43,28 @@ const formatDate = (value) => {
   }).format(new Date(`${value}T00:00:00`));
 };
 
-export default function ConstanciaEstudios() {
+const formatIssueDate = (value) => {
+  if (!value) return "___ dias del mes de __________ de ____";
+
+  const date = new Date(`${value}T00:00:00`);
+  const day = new Intl.DateTimeFormat("es-MX", {
+    day: "numeric",
+  }).format(date);
+  const month = new Intl.DateTimeFormat("es-MX", {
+    month: "long",
+  }).format(date);
+  const year = new Intl.DateTimeFormat("es-MX", {
+    year: "numeric",
+  }).format(date);
+
+  return `${day} dias del mes de ${month} de ${year}`;
+};
+
+export default function ConstanciaTerminacion() {
   const [form, setForm] = useState(initialForm);
 
   const fechaLegible = useMemo(
-    () => formatDate(form.fechaEmision),
+    () => formatIssueDate(form.fechaEmision),
     [form.fechaEmision],
   );
 
@@ -73,8 +84,9 @@ export default function ConstanciaEstudios() {
   };
 
   const nombreAlumno = form.nombreAlumno || "NOMBRE COMPLETO DEL ALUMNO";
-  const matricula = form.matricula || "MATRICULA";
   const carrera = form.carrera || "NOMBRE DE LA CARRERA";
+  const fechaInicioEstudios = formatDate(form.fechaInicioEstudios);
+  const fechaFinEstudios = formatDate(form.fechaFinEstudios);
 
   return (
     <div className="space-y-6 p-6">
@@ -368,7 +380,7 @@ export default function ConstanciaEstudios() {
 
           <div>
             <h1 className="text-4xl font-bold text-slate-900">
-              Constancia de estudios
+              Constancia de terminación
             </h1>
 
             <p className="mt-1 text-slate-500">
@@ -441,32 +453,17 @@ export default function ConstanciaEstudios() {
               />
             </label>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <label className="block">
-                <span className="text-sm font-medium text-slate-700">
-                  Matricula
-                </span>
-                <input
-                  name="matricula"
-                  value={form.matricula}
-                  onChange={handleChange}
-                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  placeholder="Ej. 20231001"
-                />
-              </label>
-
-              <label className="block">
-                <span className="text-sm font-medium text-slate-700">
-                  Departamento
-                </span>
-                <input
-                  name="departamento"
-                  value={form.departamento}
-                  onChange={handleChange}
-                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
-              </label>
-            </div>
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">
+                Departamento
+              </span>
+              <input
+                name="departamento"
+                value={form.departamento}
+                onChange={handleChange}
+                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              />
+            </label>
 
             <label className="block">
               <span className="text-sm font-medium text-slate-700">
@@ -489,46 +486,37 @@ export default function ConstanciaEstudios() {
                 value={form.carrera}
                 onChange={handleChange}
                 className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                placeholder="Ej. Lic. en Derecho"
+                placeholder="Ej. Licenciatura en Criminologia"
               />
             </label>
 
-            <label className="block">
-              <span className="text-sm font-medium text-slate-700">
-                Plan de estudios
-              </span>
-              <input
-                name="planEstudios"
-                value={form.planEstudios}
-                onChange={handleChange}
-                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                placeholder="Opcional"
-              />
-            </label>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="text-sm font-medium text-slate-700">
+                  Inicio de estudios
+                </span>
+                <input
+                  type="date"
+                  name="fechaInicioEstudios"
+                  value={form.fechaInicioEstudios}
+                  onChange={handleChange}
+                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                />
+              </label>
 
-            <label className="block">
-              <span className="text-sm font-medium text-slate-700">
-                Horario
-              </span>
-              <input
-                name="horario"
-                value={form.horario}
-                onChange={handleChange}
-                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-              />
-            </label>
-
-            <label className="block">
-              <span className="text-sm font-medium text-slate-700">
-                Periodo vacacional
-              </span>
-              <input
-                name="periodoVacacional"
-                value={form.periodoVacacional}
-                onChange={handleChange}
-                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-              />
-            </label>
+              <label className="block">
+                <span className="text-sm font-medium text-slate-700">
+                  Fin de estudios
+                </span>
+                <input
+                  type="date"
+                  name="fechaFinEstudios"
+                  value={form.fechaFinEstudios}
+                  onChange={handleChange}
+                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                />
+              </label>
+            </div>
 
             <label className="block">
               <span className="text-sm font-medium text-slate-700">
@@ -543,7 +531,7 @@ export default function ConstanciaEstudios() {
               />
             </label>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="block">
                 <span className="text-sm font-medium text-slate-700">
                   Ciudad
@@ -567,7 +555,7 @@ export default function ConstanciaEstudios() {
                   className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 />
               </label>
-            </div>
+            </div> */}
 
             <label className="block">
               <span className="text-sm font-medium text-slate-700">
@@ -638,33 +626,27 @@ export default function ConstanciaEstudios() {
             </header>
 
             <main className="constancia-cuerpo">
-              <p className="destinatario">A QUIEN CORRESPONDA</p>
+              <p className="destinatario">A QUIEN CORRESPONDA:</p>
 
               <p>
-                Por medio de la presente hago constar que segun comprobantes
+                Por medio de la presente hago constar que segun documentos
                 que obran en el archivo general del plantel, {textos.alumno}:
               </p>
 
               <h2 className="nombre-alumno">{nombreAlumno.toUpperCase()}</h2>
 
               <p>
-                Cuya fotografia se muestra en el margen superior derecho, es
-                estudiante en esta Institucion con la matricula{" "}
-                <strong>{matricula}</strong>, se encuentra {textos.inscrito} a
-                esta Institucion en la carrera de{" "}
-                <strong>{carrera.toUpperCase()}</strong>
-                {form.planEstudios
-                  ? ` con el plan de estudios ${form.planEstudios}`
-                  : ""}
-                . {textos.alumnoCapitalizado} curso el periodo escolar con
-                horario de {form.horario} y con un periodo vacacional del{" "}
-                {form.periodoVacacional}.
+                Culminó satisfactoriamente el plan de estudios de la{" "}
+                <strong>{carrera.toUpperCase()}</strong> de esta Institución, en
+                el periodo que corresponde del {fechaInicioEstudios} al{" "}
+                {fechaFinEstudios}.
               </p>
 
               <p>
-                Se extiende la presente constancia a peticion{" "}
+                Se extiende la presente constancia a petición{" "}
                 {textos.peticion} y para los usos legales a que haya lugar, en
-                la Ciudad de {form.ciudad} {form.estado} al dia {fechaLegible}.
+                la Ciudad de Tijuana, Baja California, a los{" "}
+                {fechaLegible}.
               </p>
 
               <section className="firma">

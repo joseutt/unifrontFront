@@ -1,3 +1,6 @@
+import { createContext, useContext, useState } from "react";
+
+const AuthContext = createContext();
 import { useState } from "react";
 import { AuthContext } from "./authStore";
 
@@ -50,3 +53,6 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = () => useContext(AuthContext);

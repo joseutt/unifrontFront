@@ -10,6 +10,11 @@ import UsuariosAltaPage from "./pages/UsuariosAltaPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
+import ConstanciaTerminacion from "./pages/ConstanciaTerminacion";
+import ActaExamenExtraordinario from "./pages/ActaExamenExtraordinario";
+import ActaExamenTituloSuficiencia from "./pages/ActaExamenTituloSuficiencia";
+import ReciboDocumentosOriginales from "./pages/ReciboDocumentosOriginales";
+
 
 /* Temporales */
 function AlumnosPage() {
@@ -117,6 +122,7 @@ function App() {
           }
         />
 
+        {/* Constancia estudios */}
         {/* Usuarios */}
         <Route
           path="/usuarios"
@@ -142,7 +148,7 @@ function App() {
 
         {/* Constancias */}
         <Route
-          path="/constancias"
+          path="/constancia-estudios"
           element={
             <ProtectedRoute>
               <MainLayout>
@@ -152,6 +158,13 @@ function App() {
           }
         />
 
+        {/* Constancia Terminacion */}
+        <Route
+          path="/constancia-terminacion"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ConstanciaTerminacion />
         {/* Documentos alumnos */}
         <Route
           path="/documentos-alumno"
@@ -164,6 +177,37 @@ function App() {
           }
         />
 
+        {/* Acta examen extraordinario */}
+        <Route
+          path="/acta-examen-extraordinario"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ActaExamenExtraordinario />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Acta examen titulo suficiencia */}
+        <Route
+          path="/acta-examen-titulo-suficiencia"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ActaExamenTituloSuficiencia />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Recibo documentos originales */}
+        <Route
+          path="/recibo-documentos-originales"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ReciboDocumentosOriginales />
         <Route
           path="/documentos-alumno/:alumnoId"
           element={
