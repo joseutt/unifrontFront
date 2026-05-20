@@ -27,6 +27,12 @@ export const crearUsuario = async (data) => {
   return response.data;
 };
 
+export const actualizarUsuario = async (idUsuario, data) => {
+  const response = await api.patch(`/usuarios/${idUsuario}`, data);
+
+  return response.data;
+};
+
 export const eliminarUsuario = async (idUsuario) => {
   const response = await api.delete(`/usuarios/${idUsuario}`);
 
@@ -93,8 +99,8 @@ export const crearProcedenciaAcademica = async (data) => {
   return response.data;
 };
 
-export const crearRecepcionDocumento = async (data) => {
-  const response = await api.post("/recepciones-documento", data);
+export const obtenerDetalleUsuario = async (usuario) => {
+  const response = await api.get(`/usuarios/${usuario.id_usuario}/expediente`);
 
   return response.data;
 };
@@ -154,7 +160,6 @@ export const crearUsuarioPorRol = async ({
           id_alumno: alumnoCreado.id_alumno,
         });
       }
-
     }
 
     if (rol === "DOCENTE") {

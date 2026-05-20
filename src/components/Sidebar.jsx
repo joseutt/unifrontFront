@@ -16,6 +16,7 @@ function Sidebar() {
     Escolar: true,
     Docentes: true,
     Administración: true,
+    Documentos: true,
   });
 
   const toggleSection = (title) => {
