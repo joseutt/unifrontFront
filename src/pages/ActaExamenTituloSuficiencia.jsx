@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Download, FileText } from "lucide-react";
-import logoUnifront from "../assets/UnifrontLogo.png";
+import logoUnifront from "../assets/UnifrontLogoColorSinFondo.png";
 
 const initialForm = {
   fecha: "",
@@ -59,7 +59,7 @@ export default function ActaExamenTituloSuficiencia() {
             position: relative;
             width: 8.5in;
             min-height: 11in;
-            padding: 0.45in 1.16in 0.55in;
+            padding: 0.28in 1.0in 0.55in;
             background: #fff;
             overflow: hidden;
           }
@@ -69,10 +69,9 @@ export default function ActaExamenTituloSuficiencia() {
           }
 
           .acta-titulo-logo {
-            width: 2.65in;
+            width: 2.98in;
             height: auto;
-            margin: 0 auto 0.22in;
-            filter: grayscale(1);
+            margin: 0 auto 0.12in;
           }
 
           .acta-titulo-principal {
@@ -419,14 +418,12 @@ export default function ActaExamenTituloSuficiencia() {
                   Por medio de la presente, le informo que el alumno (a)
                 </span>
                 <span className="acta-titulo-linea acta-titulo-linea-nombre">
-                  {/* {lineValue(form.nombreAlumno)} */}
+                  {lineValue(form.nombreAlumno)}
                 </span>
               </div>
 
               <div className="acta-titulo-row">
-                <span className="acta-titulo-linea acta-titulo-linea-full">
-                  {lineValue(form.nombreAlumno)}
-                </span>
+                <span className="acta-titulo-linea acta-titulo-linea-full" />
               </div>
 
               <div className="acta-titulo-row">
@@ -456,14 +453,12 @@ export default function ActaExamenTituloSuficiencia() {
                   Presentó Examen a título de suficiencia de la materia de:
                 </span>
                 <span className="acta-titulo-linea acta-titulo-linea-full">
-                  {/* {lineValue(form.materia)} */}
+                  {lineValue(form.materia)}
                 </span>
               </div>
 
               <div className="acta-titulo-row">
-                <span className="acta-titulo-linea acta-titulo-linea-materia">
-                  {lineValue(form.materia)}
-                </span>
+                <span className="acta-titulo-linea acta-titulo-linea-materia" />
                 <span className="acta-titulo-label">Clave:</span>
                 <span className="acta-titulo-linea acta-titulo-linea-corta">
                   {lineValue(form.clave)}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Download, FileText } from "lucide-react";
-import logoUnifront from "../assets/UnifrontLogo.png";
+import logoUnifront from "../assets/UnifrontLogoColorSinFondo.png";
 
 const initialForm = {
   fecha: "",
@@ -56,7 +56,7 @@ export default function ActaExamenExtraordinario() {
             position: relative;
             width: 8.5in;
             min-height: 11in;
-            padding: 0.34in 0.9in 0.55in;
+            padding: 0.28in 0.86in 0.55in;
             background: #fff;
             overflow: hidden;
           }
@@ -66,14 +66,14 @@ export default function ActaExamenExtraordinario() {
           }
 
           .acta-logo {
-            width: 2.82in;
+            width: 2.98in;
             height: auto;
-            margin: 0 auto 0.08in;
+            margin: 0 auto 0.06in;
           }
 
           .acta-titulo {
             margin: 0;
-            font-size: 15.5pt;
+            font-size: 15pt;
             font-weight: 800;
             letter-spacing: 0;
           }
@@ -82,8 +82,8 @@ export default function ActaExamenExtraordinario() {
             display: grid;
             grid-template-columns: 1fr 1.85in;
             gap: 0.14in;
-            margin-top: 0.22in;
-            margin-bottom: 0.14in;
+            margin-top: 0.2in;
+            margin-bottom: 0.1in;
           }
 
           .acta-meta-derecha {
@@ -409,14 +409,12 @@ export default function ActaExamenExtraordinario() {
                   Por medio de la presente, le informo que el alumno (a)
                 </span>
                 <span className="acta-linea acta-linea-nombre">
-                  {/* {lineValue(form.nombreAlumno)} */}
+                  {lineValue(form.nombreAlumno)}
                 </span>
               </div>
 
               <div className="acta-row">
-                <span className="acta-linea acta-linea-full">
-                  {lineValue(form.nombreAlumno)}
-                </span>
+                <span className="acta-linea acta-linea-full" />
               </div>
 
               <div className="acta-row">

@@ -165,6 +165,11 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <ConstanciaTerminacion />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Documentos alumnos */}
         <Route
           path="/documentos-alumno"
@@ -208,6 +213,12 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <ReciboDocumentosOriginales />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Documentos alumnos */}
         <Route
           path="/documentos-alumno/:alumnoId"
           element={

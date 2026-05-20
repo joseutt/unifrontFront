@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Download, FileText } from "lucide-react";
-import logoUnifront from "../assets/UnifrontLogo.png";
+import logoUnifront from "../assets/UnifrontLogoColorSinFondo.png";
 
 const initialForm = {
   sexo: "hombre",
@@ -170,19 +170,22 @@ export default function ConstanciaEstudios() {
           .marca-institucional {
             position: relative;
             z-index: 1;
-            display: grid;
-            grid-template-columns: 2.72in 1fr;
-            align-items: center;
-            min-height: 1.18in;
+            min-height: 1.62in;
           }
 
           .logo-unifront {
-            width: 2.62in;
+            position: absolute;
+            left: 0.33in;
+            top: 0.75in;
+            width: 2.82in;
             height: auto;
           }
 
           .datos-institucion {
-            margin-left: -0.38in;
+            position: absolute;
+            top: 0.33in;
+            left: 1.64in;
+            right: 0.52in;
             text-align: center;
             font-size: 9.8pt;
             font-weight: 700;
@@ -201,8 +204,8 @@ export default function ConstanciaEstudios() {
 
           .documento-meta {
             position: absolute;
-            top: 1.48in;
-            right: 0.06in;
+            top: 1.54in;
+            right: 0.02in;
             z-index: 1;
             width: 3.46in;
             padding: 0.08in 0.13in;
