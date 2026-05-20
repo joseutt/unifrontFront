@@ -5,6 +5,9 @@ import PlanesEstudioPage from "./pages/PlanesEstudioPage";
 import CarrerasPage from "./pages/CarrerasPage";
 import MateriasPage from "./pages/MateriasPage";
 import ConstanciaEstudios from "./pages/ConstanciaEstudios";
+import DocumentosAlumnoPage from "./pages/DocumentosAlumnoPage";
+import UsuariosAltaPage from "./pages/UsuariosAltaPage";
+import UsuariosPage from "./pages/UsuariosPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 
@@ -114,6 +117,29 @@ function App() {
           }
         />
 
+        {/* Usuarios */}
+        <Route
+          path="/usuarios"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <UsuariosPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/usuarios/nuevo"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <UsuariosAltaPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Constancias */}
         <Route
           path="/constancias"
@@ -121,6 +147,29 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <ConstanciaEstudios />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Documentos alumnos */}
+        <Route
+          path="/documentos-alumno"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <DocumentosAlumnoPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/documentos-alumno/:alumnoId"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <DocumentosAlumnoPage />
               </MainLayout>
             </ProtectedRoute>
           }

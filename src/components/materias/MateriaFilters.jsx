@@ -3,9 +3,6 @@ import { Search } from "lucide-react";
 export default function MateriaFilters({
   busqueda,
   setBusqueda,
-  carreraFiltro,
-  setCarreraFiltro,
-  carreras,
 }) {
   return (
     <div className="flex flex-col gap-3 md:flex-row">

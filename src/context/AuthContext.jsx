@@ -1,6 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-
-const AuthContext = createContext();
+import { useState } from "react";
+import { AuthContext } from "./authStore";
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -21,20 +20,13 @@ export function AuthProvider({ children }) {
     }
   });
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, [token]);
+  const isAuthenticated = Boolean(token);
 
   const login = (jwt, userData) => {
     localStorage.setItem("token", jwt);
     localStorage.setItem("user", JSON.stringify(userData));
     setToken(jwt);
     setUser(userData);
-    setIsAuthenticated(true);
   };
 
   const logout = () => {
@@ -42,7 +34,6 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
     setToken(null);
     setUser(null);
-    setIsAuthenticated(false);
   };
 
   return (
@@ -59,5 +50,3 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
-
-export const useAuth = () => useContext(AuthContext);
