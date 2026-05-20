@@ -7,6 +7,11 @@ import MateriasPage from "./pages/MateriasPage";
 import ConstanciaEstudios from "./pages/ConstanciaEstudios";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
+import ConstanciaTerminacion from "./pages/ConstanciaTerminacion";
+import ActaExamenExtraordinario from "./pages/ActaExamenExtraordinario";
+import ActaExamenTituloSuficiencia from "./pages/ActaExamenTituloSuficiencia";
+import ReciboDocumentosOriginales from "./pages/ReciboDocumentosOriginales";
+
 
 /* Temporales */
 function AlumnosPage() {
@@ -114,13 +119,61 @@ function App() {
           }
         />
 
-        {/* Constancias */}
+        {/* Constancia estudios */}
         <Route
-          path="/constancias"
+          path="/constancia-estudios"
           element={
             <ProtectedRoute>
               <MainLayout>
                 <ConstanciaEstudios />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Constancia Terminacion */}
+        <Route
+          path="/constancia-terminacion"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ConstanciaTerminacion />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Acta examen extraordinario */}
+        <Route
+          path="/acta-examen-extraordinario"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ActaExamenExtraordinario />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Acta examen titulo suficiencia */}
+        <Route
+          path="/acta-examen-titulo-suficiencia"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ActaExamenTituloSuficiencia />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Recibo documentos originales */}
+        <Route
+          path="/recibo-documentos-originales"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ReciboDocumentosOriginales />
               </MainLayout>
             </ProtectedRoute>
           }

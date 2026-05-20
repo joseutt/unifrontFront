@@ -101,9 +101,33 @@ export const sidebarSections = [
 
     items: [
       {
-        icon: Users,
+        icon: BookOpen,
         label: "Constancias de estudio",
-        path: "/constancias",
+        path: "/constancia-estudios",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
+        icon: BookOpen,
+        label: "Constancias de terminación",
+        path: "/constancia-terminacion",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
+        icon: BookOpen,
+        label: "Acta de examen extraordinario",
+        path: "/acta-examen-extraordinario",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
+        icon: BookOpen,
+        label: "Acta de examen titulo suficiencia",
+        path: "/acta-examen-titulo-suficiencia",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
+        icon: BookOpen,
+        label: "Recibo documentos originales",
+        path: "/recibo-documentos-originales",
         roles: ["ADMIN", "CONTROL_ESCOLAR"],
       },
     ],
