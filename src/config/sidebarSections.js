@@ -77,7 +77,7 @@ export const sidebarSections = [
     items: [
       {
         icon: ClipboardList,
-        label: "Captura",
+        label: "Calificaciones",
         path: "/captura",
         roles: ["DOCENTE"],
       },

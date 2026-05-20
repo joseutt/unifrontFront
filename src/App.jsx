@@ -6,6 +6,7 @@ import CarrerasPage from "./pages/CarrerasPage";
 import MateriasPage from "./pages/MateriasPage";
 import ConstanciaEstudios from "./pages/ConstanciaEstudios";
 import DocumentosAlumnoPage from "./pages/DocumentosAlumnoPage";
+import CapturaCalificacionesPage from "./pages/CapturaCalificacionesPage";
 import UsuariosAltaPage from "./pages/UsuariosAltaPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -19,10 +20,6 @@ import ReciboDocumentosOriginales from "./pages/ReciboDocumentosOriginales";
 /* Temporales */
 function AlumnosPage() {
   return <div className="p-6 text-2xl font-bold">Página de alumnos</div>;
-}
-
-function CapturaPage() {
-  return <div className="p-6 text-2xl font-bold">Página de captura</div>;
 }
 
 function CuadroHonorPage() {
@@ -104,7 +101,7 @@ function App() {
           element={
             <ProtectedRoute>
               <MainLayout>
-                <CapturaPage />
+                <CapturaCalificacionesPage />
               </MainLayout>
             </ProtectedRoute>
           }
