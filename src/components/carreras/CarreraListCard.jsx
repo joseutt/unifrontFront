@@ -1,4 +1,4 @@
-import { Trash2, Pencil, GraduationCap } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 
 export default function CarreraListCard({ carreras, onEliminar, onEditar }) {
   return (

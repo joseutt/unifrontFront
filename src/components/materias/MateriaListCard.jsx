@@ -1,4 +1,4 @@
-import { Search, Trash2, BookOpen, Edit2 } from "lucide-react";
+import { Trash2, Edit2 } from "lucide-react";
 import MateriaFilters from "./MateriaFilters";
 
 export default function MateriaListCard({

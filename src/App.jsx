@@ -5,6 +5,9 @@ import PlanesEstudioPage from "./pages/PlanesEstudioPage";
 import CarrerasPage from "./pages/CarrerasPage";
 import MateriasPage from "./pages/MateriasPage";
 import ConstanciaEstudios from "./pages/ConstanciaEstudios";
+import DocumentosAlumnoPage from "./pages/DocumentosAlumnoPage";
+import UsuariosAltaPage from "./pages/UsuariosAltaPage";
+import UsuariosPage from "./pages/UsuariosPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 import ConstanciaTerminacion from "./pages/ConstanciaTerminacion";
@@ -120,6 +123,30 @@ function App() {
         />
 
         {/* Constancia estudios */}
+        {/* Usuarios */}
+        <Route
+          path="/usuarios"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <UsuariosPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/usuarios/nuevo"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <UsuariosAltaPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Constancias */}
         <Route
           path="/constancia-estudios"
           element={
@@ -138,6 +165,13 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <ConstanciaTerminacion />
+        {/* Documentos alumnos */}
+        <Route
+          path="/documentos-alumno"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <DocumentosAlumnoPage />
               </MainLayout>
             </ProtectedRoute>
           }
@@ -174,6 +208,12 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <ReciboDocumentosOriginales />
+        <Route
+          path="/documentos-alumno/:alumnoId"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <DocumentosAlumnoPage />
               </MainLayout>
             </ProtectedRoute>
           }

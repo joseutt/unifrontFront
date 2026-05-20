@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authStore";
 import { useState } from "react";
 import { LogOut } from "lucide-react";
 import logo from "../assets/UnifrontLogo.png";
@@ -16,6 +16,7 @@ function Sidebar() {
     Escolar: true,
     Docentes: true,
     Administración: true,
+    Documentos: true,
   });
 
   const toggleSection = (title) => {

@@ -1,26 +1,16 @@
 import { useState } from "react";
-
 import { GraduationCap } from "lucide-react";
-
 import { loginRequest } from "../services/authService";
-
-import { useAuth } from "../context/AuthContext";
-
+import { useAuth } from "../context/authStore";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
-
   const { login } = useAuth();
-
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
-
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

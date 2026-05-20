@@ -7,6 +7,7 @@ import {
   GraduationCap,
   Library,
   User,
+  FileStack,
 } from "lucide-react";
 
 export const sidebarSections = [
@@ -128,6 +129,12 @@ export const sidebarSections = [
         icon: BookOpen,
         label: "Recibo documentos originales",
         path: "/recibo-documentos-originales",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
+        icon: FileStack,
+        label: "Expediente digital",
+        path: "/documentos-alumno",
         roles: ["ADMIN", "CONTROL_ESCOLAR"],
       },
     ],
