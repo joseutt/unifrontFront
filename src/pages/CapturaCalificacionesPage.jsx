@@ -46,10 +46,9 @@ const extraerValores = (captura) => {
 };
 
 const getGrupoTitulo = (grupoMateria) => {
-  return [
-    grupoMateria?.grupo?.nombre,
-    grupoMateria?.materia?.nombre,
-  ].filter(Boolean).join(" - ");
+  return [grupoMateria?.grupo?.nombre, grupoMateria?.materia?.nombre]
+    .filter(Boolean)
+    .join(" - ");
 };
 
 const getGrupoMeta = (grupoMateria) => {
@@ -57,7 +56,9 @@ const getGrupoMeta = (grupoMateria) => {
     grupoMateria?.periodo?.nombre,
     grupoMateria?.grupo?.turno,
     grupoMateria?.aula ? `Aula ${grupoMateria.aula}` : null,
-  ].filter(Boolean).join(" | ");
+  ]
+    .filter(Boolean)
+    .join(" | ");
 };
 
 export default function CapturaCalificacionesPage() {
@@ -276,7 +277,8 @@ export default function CapturaCalificacionesPage() {
 
     const calificaciones = captura.alumnos.flatMap((alumno) =>
       captura.parciales.map((parcial) => {
-        const value = formValues[getCellKey(alumno.id_carga, parcial.id_parcial)];
+        const value =
+          formValues[getCellKey(alumno.id_carga, parcial.id_parcial)];
         const valueLimpio = String(value).trim();
 
         return {
@@ -585,15 +587,48 @@ export default function CapturaCalificacionesPage() {
                                     type="number"
                                     min="0"
                                     max="100"
-                                    step="0.01"
+                                    step="1"
                                     value={formValues[key] ?? ""}
-                                    onChange={(event) =>
+                                    onChange={(event) => {
+                                      let value = event.target.value;
+
+                                      // Permitir vacío para borrar el campo
+                                      if (value === "") {
+                                        handleChangeCalificacion(
+                                          alumno.id_carga,
+                                          parcial.id_parcial,
+                                          "",
+                                        );
+                                        return;
+                                      }
+
+                                      // Convertir a entero
+                                      value = parseInt(value, 10);
+
+                                      // Evitar NaN
+                                      if (isNaN(value)) return;
+
+                                      // Limitar entre 0 y 100
+                                      if (value < 0) value = 0;
+                                      if (value > 100) value = 100;
+
                                       handleChangeCalificacion(
                                         alumno.id_carga,
                                         parcial.id_parcial,
-                                        event.target.value,
-                                      )
-                                    }
+                                        value,
+                                      );
+                                    }}
+                                    onKeyDown={(e) => {
+                                      // Bloquear caracteres para decimales
+                                      if (
+                                        e.key === "." ||
+                                        e.key === "," ||
+                                        e.key === "e" ||
+                                        e.key === "-"
+                                      ) {
+                                        e.preventDefault();
+                                      }
+                                    }}
                                     aria-label={`Calificacion ${parcial.nombre} de ${
                                       alumno.alumno?.nombre || "alumno"
                                     }`}

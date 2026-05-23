@@ -3,11 +3,13 @@ import {
   Users,
   BookOpen,
   ClipboardList,
+  CalendarCheck,
   Award,
   GraduationCap,
   Library,
   User,
   FileStack,
+  FileSpreadsheet,
 } from "lucide-react";
 
 export const sidebarSections = [
@@ -57,9 +59,9 @@ export const sidebarSections = [
     items: [
       {
         icon: Users,
-        label: "Alumnos",
+        label: "Cargas academicas",
         path: "/alumnos",
-        roles: ["ADMIN"],
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
       },
 
       {
@@ -81,6 +83,12 @@ export const sidebarSections = [
         path: "/captura",
         roles: ["DOCENTE"],
       },
+      {
+        icon: CalendarCheck,
+        label: "Asistencia",
+        path: "/asistencia",
+        roles: ["DOCENTE"],
+      },
     ],
   },
 
@@ -93,6 +101,12 @@ export const sidebarSections = [
         label: "Usuarios",
         path: "/usuarios",
         roles: ["ADMIN"],
+      },
+      {
+        icon: FileSpreadsheet,
+        label: "Reportes",
+        path: "/reportes-fundamentales",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
       },
     ],
   },
