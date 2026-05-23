@@ -6,9 +6,12 @@ import CarrerasPage from "./pages/CarrerasPage";
 import MateriasPage from "./pages/MateriasPage";
 import ConstanciaEstudios from "./pages/ConstanciaEstudios";
 import DocumentosAlumnoPage from "./pages/DocumentosAlumnoPage";
+import AlumnosGruposPage from "./pages/AlumnosGruposPage";
+import AsistenciaPage from "./pages/AsistenciaPage";
 import CapturaCalificacionesPage from "./pages/CapturaCalificacionesPage";
 import UsuariosAltaPage from "./pages/UsuariosAltaPage";
 import UsuariosPage from "./pages/UsuariosPage";
+import ReportesFundamentalesPage from "./pages/ReportesFundamentalesPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 import ConstanciaTerminacion from "./pages/ConstanciaTerminacion";
@@ -16,11 +19,6 @@ import ActaExamenExtraordinario from "./pages/ActaExamenExtraordinario";
 import ActaExamenTituloSuficiencia from "./pages/ActaExamenTituloSuficiencia";
 import ReciboDocumentosOriginales from "./pages/ReciboDocumentosOriginales";
 
-
-/* Temporales */
-function AlumnosPage() {
-  return <div className="p-6 text-2xl font-bold">Página de alumnos</div>;
-}
 
 function CuadroHonorPage() {
   return (
@@ -89,7 +87,7 @@ function App() {
           element={
             <ProtectedRoute>
               <MainLayout>
-                <AlumnosPage />
+                <AlumnosGruposPage />
               </MainLayout>
             </ProtectedRoute>
           }
@@ -102,6 +100,18 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <CapturaCalificacionesPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Asistencia */}
+        <Route
+          path="/asistencia"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <AsistenciaPage />
               </MainLayout>
             </ProtectedRoute>
           }
@@ -138,6 +148,18 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <UsuariosAltaPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Reportes fundamentales */}
+        <Route
+          path="/reportes-fundamentales"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ReportesFundamentalesPage />
               </MainLayout>
             </ProtectedRoute>
           }
