@@ -12,6 +12,12 @@ export const obtenerGruposMaterias = async () => {
   return response.data;
 };
 
+export const obtenerPeriodos = async () => {
+  const response = await api.get("/periodos");
+
+  return response.data;
+};
+
 export const obtenerCatalogosCargaAcademica = async () => {
   const [grupos, materias, docentes, periodos, planes] = await Promise.all([
     api.get("/grupos"),
