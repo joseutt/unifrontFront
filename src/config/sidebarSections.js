@@ -146,6 +146,18 @@ export const sidebarSections = [
         roles: ["ADMIN", "CONTROL_ESCOLAR"],
       },
       {
+        icon: BookOpen,
+        label: "Registro reinscripcion",
+        path: "/registro-reinscripcion-alumnos",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
+        icon: BookOpen,
+        label: "Boleta final",
+        path: "/boleta-final",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
         icon: FileStack,
         label: "Expediente digital",
         path: "/documentos-alumno",

@@ -17,7 +17,9 @@ import MainLayout from "./layouts/MainLayout";
 import ConstanciaTerminacion from "./pages/ConstanciaTerminacion";
 import ActaExamenExtraordinario from "./pages/ActaExamenExtraordinario";
 import ActaExamenTituloSuficiencia from "./pages/ActaExamenTituloSuficiencia";
+import BoletaFinal from "./pages/BoletaFinal";
 import ReciboDocumentosOriginales from "./pages/ReciboDocumentosOriginales";
+import RegistroReinscripcionAlumnos from "./pages/RegistroReinscripcionAlumnos";
 
 
 function CuadroHonorPage() {
@@ -232,6 +234,30 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <ReciboDocumentosOriginales />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Registro reinscripcion alumnos */}
+        <Route
+          path="/registro-reinscripcion-alumnos"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <RegistroReinscripcionAlumnos />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Boleta final */}
+        <Route
+          path="/boleta-final"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <BoletaFinal />
               </MainLayout>
             </ProtectedRoute>
           }

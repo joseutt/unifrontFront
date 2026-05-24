@@ -25,3 +25,14 @@ export const guardarCapturaCalificaciones = async (
 
   return response.data;
 };
+
+export const obtenerBoletaFinal = async ({ alumnoId, periodoId }) => {
+  const response = await api.get("/calificaciones/boleta-final", {
+    params: {
+      alumno_id: alumnoId,
+      periodo_id: periodoId,
+    },
+  });
+
+  return response.data;
+};

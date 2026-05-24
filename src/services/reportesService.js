@@ -28,6 +28,23 @@ export const obtenerReportesFundamentales = async () => {
   return response.data;
 };
 
+export const obtenerReporteReinscripcionAlumnos = async ({
+  grupoId,
+  periodoId,
+}) => {
+  const response = await api.get(
+    "/reportes/fundamentales/reinscripcion-alumnos",
+    {
+      params: {
+        grupo_id: grupoId,
+        periodo_id: periodoId || undefined,
+      },
+    },
+  );
+
+  return response.data;
+};
+
 export const descargarReportesFundamentales = async () => {
   const response = await api.get("/reportes/fundamentales/excel", {
     responseType: "blob",
