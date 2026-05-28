@@ -12,6 +12,7 @@ import CapturaCalificacionesPage from "./pages/CapturaCalificacionesPage";
 import UsuariosAltaPage from "./pages/UsuariosAltaPage";
 import UsuariosPage from "./pages/UsuariosPage";
 import ReportesFundamentalesPage from "./pages/ReportesFundamentalesPage";
+import CuadroHonorPage from "./pages/CuadroHonorPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
 import ConstanciaTerminacion from "./pages/ConstanciaTerminacion";
@@ -21,21 +22,12 @@ import BoletaFinal from "./pages/BoletaFinal";
 import ReciboDocumentosOriginales from "./pages/ReciboDocumentosOriginales";
 import RegistroReinscripcionAlumnos from "./pages/RegistroReinscripcionAlumnos";
 
-
-function CuadroHonorPage() {
-  return (
-    <div className="p-6 text-2xl font-bold">Página de cuadro de honor</div>
-  );
-}
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Login */}
         <Route path="/" element={<Login />} />
 
-        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -47,7 +39,6 @@ function App() {
           }
         />
 
-        {/* Carreras */}
         <Route
           path="/carreras"
           element={
@@ -59,7 +50,6 @@ function App() {
           }
         />
 
-        {/* Materias */}
         <Route
           path="/materias"
           element={
@@ -71,7 +61,6 @@ function App() {
           }
         />
 
-        {/* Planes */}
         <Route
           path="/planes-estudio"
           element={
@@ -83,7 +72,6 @@ function App() {
           }
         />
 
-        {/* Alumnos */}
         <Route
           path="/alumnos"
           element={
@@ -95,7 +83,6 @@ function App() {
           }
         />
 
-        {/* Captura */}
         <Route
           path="/captura"
           element={
@@ -107,7 +94,6 @@ function App() {
           }
         />
 
-        {/* Asistencia */}
         <Route
           path="/asistencia"
           element={
@@ -119,7 +105,6 @@ function App() {
           }
         />
 
-        {/* Cuadro honor */}
         <Route
           path="/cuadro-honor"
           element={
@@ -131,8 +116,6 @@ function App() {
           }
         />
 
-        {/* Constancia estudios */}
-        {/* Usuarios */}
         <Route
           path="/usuarios"
           element={
@@ -155,7 +138,6 @@ function App() {
           }
         />
 
-        {/* Reportes fundamentales */}
         <Route
           path="/reportes-fundamentales"
           element={
@@ -167,7 +149,6 @@ function App() {
           }
         />
 
-        {/* Constancias */}
         <Route
           path="/constancia-estudios"
           element={
@@ -179,7 +160,6 @@ function App() {
           }
         />
 
-        {/* Constancia Terminacion */}
         <Route
           path="/constancia-terminacion"
           element={
@@ -191,7 +171,6 @@ function App() {
           }
         />
 
-        {/* Documentos alumnos */}
         <Route
           path="/documentos-alumno"
           element={
@@ -203,7 +182,6 @@ function App() {
           }
         />
 
-        {/* Acta examen extraordinario */}
         <Route
           path="/acta-examen-extraordinario"
           element={
@@ -214,8 +192,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
-        {/* Acta examen titulo suficiencia */}
+
         <Route
           path="/acta-examen-titulo-suficiencia"
           element={
@@ -227,7 +204,6 @@ function App() {
           }
         />
 
-        {/* Recibo documentos originales */}
         <Route
           path="/recibo-documentos-originales"
           element={
@@ -239,7 +215,6 @@ function App() {
           }
         />
 
-        {/* Registro reinscripcion alumnos */}
         <Route
           path="/registro-reinscripcion-alumnos"
           element={
@@ -251,7 +226,6 @@ function App() {
           }
         />
 
-        {/* Boleta final */}
         <Route
           path="/boleta-final"
           element={
@@ -263,7 +237,6 @@ function App() {
           }
         />
 
-        {/* Documentos alumnos */}
         <Route
           path="/documentos-alumno/:alumnoId"
           element={

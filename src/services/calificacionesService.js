@@ -36,3 +36,13 @@ export const obtenerBoletaFinal = async ({ alumnoId, periodoId }) => {
 
   return response.data;
 };
+
+export const obtenerCuadroHonor = async ({ cuatrimestre, egresados }) => {
+  const response = await api.get("/calificaciones/cuadro-honor", {
+    params: egresados
+      ? { egresados: true }
+      : { cuatrimestre, egresados: false },
+  });
+
+  return response.data;
+};
