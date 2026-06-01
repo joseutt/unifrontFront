@@ -20,7 +20,9 @@ import ActaExamenTituloSuficiencia from "./pages/ActaExamenTituloSuficiencia";
 import BoletaFinal from "./pages/BoletaFinal";
 import ReciboDocumentosOriginales from "./pages/ReciboDocumentosOriginales";
 import RegistroReinscripcionAlumnos from "./pages/RegistroReinscripcionAlumnos";
-
+import PromediosGrupo from "./pages/PromediosGrupos";
+import RezagoCarreras from "./pages/RezagoCarreras";
+import Kardex from "./pages/Kardex"
 
 function CuadroHonorPage() {
   return (
@@ -270,6 +272,42 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <DocumentosAlumnoPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Promedios  */}
+        <Route
+          path="/promedios"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <PromediosGrupo />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Rezago de alumnos por carrera */}
+        <Route 
+          path="/rezago"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <RezagoCarreras/>
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Kardex*/}
+        <Route 
+          path="/kardex"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Kardex/>
               </MainLayout>
             </ProtectedRoute>
           }
