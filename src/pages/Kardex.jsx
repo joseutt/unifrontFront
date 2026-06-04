@@ -1,25 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookOpen, Download } from "lucide-react";
-import { obtenerKardexPorMatricula } from "../services/kardexService";
+import {
+  buscarAlumnosKardex,
+  obtenerKardexPorBusqueda,
+  obtenerKardexPorMatricula,
+} from "../services/kardexService";
+import unifrontLogoColor from "../assets/UnifrontLogoColorSinFondo.png";
 
 const Kardex = () => {
   const [matriculaInput, setMatriculaInput] = useState("");
   const [kardex, setKardex] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingSugerencias, setLoadingSugerencias] = useState(false);
+  const [sugerencias, setSugerencias] = useState([]);
+  const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
   const [error, setError] = useState("");
 
-  const handleBuscar = async () => {
-    const matricula = String(matriculaInput || "").trim();
+  useEffect(() => {
+    const termino = String(matriculaInput || "").trim();
+
+    if (termino.length < 2) {
+      setSugerencias([]);
+      setMostrarSugerencias(false);
+      return;
+    }
+
+    const timeout = window.setTimeout(async () => {
+      try {
+        setLoadingSugerencias(true);
+        const data = await buscarAlumnosKardex(termino);
+        setSugerencias(Array.isArray(data) ? data : []);
+        setMostrarSugerencias(true);
+      } catch {
+        setSugerencias([]);
+        setMostrarSugerencias(false);
+      } finally {
+        setLoadingSugerencias(false);
+      }
+    }, 250);
+
+    return () => window.clearTimeout(timeout);
+  }, [matriculaInput]);
+
+  const handleBuscar = async (terminoForzado) => {
+    const termino = String(terminoForzado || matriculaInput || "").trim();
     setError("");
     setKardex(null);
-    if (!matricula) { setError("Ingresa una matrícula válida."); return; }
+    setMostrarSugerencias(false);
+    if (!termino) { setError("Ingresa una matrícula o nombre válido."); return; }
     try {
       setLoading(true);
-      const data = await obtenerKardexPorMatricula(matricula);
+      const data = terminoForzado
+        ? await obtenerKardexPorMatricula(termino)
+        : await obtenerKardexPorBusqueda(termino);
       setKardex(data);
+      setMatriculaInput(data.matricula || termino);
     } catch (err) {
       const status = err?.response?.status;
-      if (status === 404) { setError("No se encontró el alumno con esa matrícula."); return; }
+      if (status === 404) { setError("No se encontró el alumno con esa matrícula o nombre."); return; }
       setError("Error al cargar el kardex. Verifica tu conexión o intenta de nuevo.");
     } finally {
       setLoading(false);
@@ -27,6 +65,12 @@ const Kardex = () => {
   };
 
   const handleKeyDown = (e) => { if (e.key === "Enter") handleBuscar(); };
+  const handleSeleccionarSugerencia = (alumno) => {
+    setMatriculaInput(alumno.matricula);
+    setSugerencias([]);
+    setMostrarSugerencias(false);
+    handleBuscar(alumno.matricula);
+  };
   const handlePrint = () => window.print();
 
   return (
@@ -88,8 +132,13 @@ const Kardex = () => {
           align-items: center;
           flex-wrap: wrap;
         }
-        .kx-search input {
+        .kx-search-field {
+          position: relative;
           flex: 1;
+          min-width: 260px;
+        }
+        .kx-search input {
+          width: 100%;
           min-width: 200px;
           padding: 9px 12px;
           border: 1px solid #cbd5e1;
@@ -99,6 +148,52 @@ const Kardex = () => {
           outline: none;
         }
         .kx-search input:focus { border-color: #1a9e7a; }
+        .kx-suggestions {
+          position: absolute;
+          top: calc(100% + 6px);
+          left: 0;
+          right: 0;
+          z-index: 20;
+          overflow: hidden;
+          border: 1px solid #cbd5e1;
+          border-radius: 10px;
+          background: #fff;
+          box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16);
+        }
+        .kx-suggestion {
+          width: 100%;
+          border: none;
+          border-bottom: 1px solid #e2e8f0;
+          background: #fff;
+          padding: 10px 12px;
+          text-align: left;
+          cursor: pointer;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+        .kx-suggestion:last-child { border-bottom: none; }
+        .kx-suggestion:hover,
+        .kx-suggestion:focus {
+          background: #f0fdfa;
+          outline: none;
+        }
+        .kx-suggestion-name {
+          display: block;
+          color: #0f172a;
+          font-size: 14px;
+          font-weight: 700;
+        }
+        .kx-suggestion-meta {
+          display: block;
+          margin-top: 2px;
+          color: #64748b;
+          font-size: 12px;
+        }
+        .kx-suggestion-empty {
+          padding: 10px 12px;
+          color: #64748b;
+          font-size: 13px;
+          font-family: Arial, Helvetica, sans-serif;
+        }
         .kx-btn-buscar {
           padding: 9px 20px;
           border-radius: 10px;
@@ -153,6 +248,12 @@ const Kardex = () => {
   justify-content: center;
 }
         .kd-logo-r { margin-left: auto; }
+        .kd-logo-img {
+          width: 90px;
+          height: auto;
+          object-fit: contain;
+          display: block;
+        }
         .kd-hdr-c { text-align: center; }
         .kd-inst {
   font-size: 16px;
@@ -357,11 +458,20 @@ const Kardex = () => {
     height: 297mm;
   }
 
+  body * {
+    visibility: hidden !important;
+  }
+
   .kx-page-header,
   .kx-search,
   .kx-error,
   .h-px {
     display: none !important;
+  }
+
+  .kd,
+  .kd * {
+    visibility: visible !important;
   }
 
   .kd {
@@ -370,6 +480,9 @@ const Kardex = () => {
     padding: 4mm;
     box-shadow: none;
     zoom: 0.90;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 
   .kd-block {
@@ -386,7 +499,7 @@ const Kardex = () => {
           </div>
           <div>
             <h1 className="kx-page-title">Kardex del alumno</h1>
-            <p className="kx-page-sub">Ingresa una matrícula para consultar el kardex académico.</p>
+            <p className="kx-page-sub">Ingresa una matrícula o nombre para consultar el kardex académico.</p>
           </div>
         </div>
         <button className="kx-btn-pdf" onClick={handlePrint} disabled={!kardex}>
@@ -399,14 +512,46 @@ const Kardex = () => {
 
       {/* ── Barra de búsqueda ── */}
       <div className="kx-search">
-        <input
-          type="text"
-          placeholder="Ingresa matrícula"
-          value={matriculaInput}
-          onChange={(e) => setMatriculaInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <button className="kx-btn-buscar" onClick={handleBuscar} disabled={loading}>
+        <div className="kx-search-field">
+          <input
+            type="text"
+            placeholder="Busca por matrícula o nombre"
+            value={matriculaInput}
+            onChange={(e) => setMatriculaInput(e.target.value)}
+            onFocus={() => {
+              if (sugerencias.length > 0 || loadingSugerencias) {
+                setMostrarSugerencias(true);
+              }
+            }}
+            onKeyDown={handleKeyDown}
+            autoComplete="off"
+          />
+          {mostrarSugerencias && (
+            <div className="kx-suggestions">
+              {loadingSugerencias && (
+                <div className="kx-suggestion-empty">Buscando coincidencias...</div>
+              )}
+              {!loadingSugerencias && sugerencias.length === 0 && (
+                <div className="kx-suggestion-empty">Sin coincidencias</div>
+              )}
+              {!loadingSugerencias && sugerencias.map((alumno) => (
+                <button
+                  key={alumno.id_alumno}
+                  type="button"
+                  className="kx-suggestion"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => handleSeleccionarSugerencia(alumno)}
+                >
+                  <span className="kx-suggestion-name">{alumno.nombre}</span>
+                  <span className="kx-suggestion-meta">
+                    {alumno.matricula} - {alumno.carrera}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <button className="kx-btn-buscar" onClick={() => handleBuscar()} disabled={loading}>
           {loading ? "Buscando..." : "Buscar"}
         </button>
       </div>
@@ -427,14 +572,15 @@ const Kardex = () => {
             <p className="kd-doccode">RVOE-BC-053-M2/14</p>
           </div>
 
-          {/* Reemplaza este div por <img src="..." /> con tu logo derecho */}
-          <div className="kd-logo kd-logo-r">Logo UNIFRONT</div>
+          <div className="kd-logo kd-logo-r">
+            <img className="kd-logo-img" src={unifrontLogoColor} alt="Logo UNIFRONT" />
+          </div>
         </div>
 
         <hr className="kd-rule" />
 
         {!kardex && !loading && (
-          <div className="kd-empty">Ingresa una matrícula y presiona <b>Buscar</b> para ver el kardex.</div>
+          <div className="kd-empty">Ingresa una matrícula o nombre y presiona <b>Buscar</b> para ver el kardex.</div>
         )}
         {loading && <div className="kd-empty">Cargando…</div>}
 
