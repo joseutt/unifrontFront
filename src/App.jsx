@@ -25,11 +25,11 @@ import PromediosGrupo from "./pages/PromediosGrupos";
 import RezagoCarreras from "./pages/RezagoCarreras";
 import Kardex from "./pages/Kardex"
 
-function CuadroHonorPage() {
-  return (
-    <div className="p-6 text-2xl font-bold">Página de cuadro de honor</div>
-  );
-}
+// function CuadroHonorPage() {
+//   return (
+//     <div className="p-6 text-2xl font-bold">Página de cuadro de honor</div>
+//   );
+// }
 
 function App() {
   return (
