@@ -65,6 +65,25 @@ export const sidebarSections = [
       },
 
       {
+        icon: Users,
+        label: "Promedios",
+        path: "/promedios",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+      {
+        icon: Users,
+        label: "Rezago",
+        path: "/rezago",
+        roles: ["ADMIN","CONTROL_ESCOLAR"],
+      },
+      {
+        icon: Users,
+        label: "Kardex",
+        path: "/kardex",
+        roles: ["ADMIN","CONTROL_ESCOLAR"],
+      },
+
+      {
         icon: Award,
         label: "Cuadro de honor",
         path: "/cuadro-honor",
