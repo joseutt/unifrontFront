@@ -3,6 +3,7 @@ import { GraduationCap } from "lucide-react";
 import { loginRequest } from "../services/authService";
 import { useAuth } from "../context/authStore";
 import { useNavigate } from "react-router-dom";
+import { consumeSessionExpiredMessage } from "../services/session";
 
 function Login() {
   const navigate = useNavigate();
@@ -10,11 +11,13 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState(() => consumeSessionExpiredMessage());
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
+    setNotice("");
 
     try {
       setLoading(true);
@@ -72,6 +75,12 @@ function Login() {
               className="mt-2 w-full rounded-xl border px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--accent)]"
             />
           </div>
+
+          {notice && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+              {notice}
+            </div>
+          )}
 
           {error && <div className="text-red-500 text-sm">{error}</div>}
 
