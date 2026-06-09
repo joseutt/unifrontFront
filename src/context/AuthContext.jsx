@@ -1,9 +1,17 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "./authStore";
+import {
+  SESSION_EXPIRED_EVENT,
+  clearSessionExpiredMessage,
+  clearStoredAuth,
+  getStoredToken,
+  getTokenExpiration,
+  markSessionExpired,
+} from "../services/session";
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(getStoredToken);
 
   const [user, setUser] = useState(() => {
     try {
@@ -23,19 +31,59 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = Boolean(token);
 
+  const clearAuthState = useCallback(() => {
+    clearStoredAuth();
+    setToken(null);
+    setUser(null);
+  }, []);
+
   const login = (jwt, userData) => {
     localStorage.setItem("token", jwt);
     localStorage.setItem("user", JSON.stringify(userData));
+    clearSessionExpiredMessage();
     setToken(jwt);
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setToken(null);
-    setUser(null);
+    clearSessionExpiredMessage();
+    clearAuthState();
   };
+
+  const expireSession = useCallback(() => {
+    markSessionExpired();
+    clearAuthState();
+  }, [clearAuthState]);
+
+  useEffect(() => {
+    window.addEventListener(SESSION_EXPIRED_EVENT, clearAuthState);
+
+    return () => {
+      window.removeEventListener(SESSION_EXPIRED_EVENT, clearAuthState);
+    };
+  }, [clearAuthState]);
+
+  useEffect(() => {
+    if (!token) {
+      return undefined;
+    }
+
+    const tokenExpiration = getTokenExpiration(token);
+
+    if (!tokenExpiration) {
+      return undefined;
+    }
+
+    const timeUntilExpiration = tokenExpiration - Date.now();
+    const timeoutId = window.setTimeout(
+      expireSession,
+      Math.max(timeUntilExpiration, 0),
+    );
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [expireSession, token]);
 
   return (
     <AuthContext.Provider
