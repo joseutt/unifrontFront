@@ -48,7 +48,7 @@ export default function DatosGeneralesFields({ form, onChange }) {
           />
         </Field>
 
-        <Field label="Correo">
+        <Field label="Correo Institucional">
           <input
             className={inputClass}
             type="email"

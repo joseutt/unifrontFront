@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import PlanesEstudioPage from "./pages/PlanesEstudioPage";
 import CarrerasPage from "./pages/CarrerasPage";
 import MateriasPage from "./pages/MateriasPage";
+import PeriodosPage from "./pages/PeriodosPage";
 import ConstanciaEstudios from "./pages/ConstanciaEstudios";
 import DocumentosAlumnoPage from "./pages/DocumentosAlumnoPage";
 import AlumnosGruposPage from "./pages/AlumnosGruposPage";
@@ -65,6 +66,17 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <MateriasPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/periodos"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <PeriodosPage />
               </MainLayout>
             </ProtectedRoute>
           }

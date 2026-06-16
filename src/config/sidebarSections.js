@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   Users,
   BookOpen,
+  CalendarDays,
   ClipboardList,
   CalendarCheck,
   Award,
@@ -61,6 +62,13 @@ export const sidebarSections = [
         icon: Users,
         label: "Cargas academicas",
         path: "/alumnos",
+        roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+
+      {
+        icon: CalendarDays,
+        label: "Periodos",
+        path: "/periodos",
         roles: ["ADMIN", "CONTROL_ESCOLAR"],
       },
 
