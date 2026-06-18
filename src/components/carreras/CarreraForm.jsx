@@ -3,6 +3,7 @@ import { Plus, Pencil, X } from "lucide-react";
 
 const getInitialForm = (carrera) => ({
   clave: carrera?.clave || "",
+  rvoe: carrera?.rvoe || "",
   nombre: carrera?.nombre || "",
   nivel: carrera?.nivel || "LICENCIATURA",
   duracion_cuatrimestres: carrera?.duracion_cuatrimestres || 9,
@@ -79,7 +80,23 @@ export default function CarreraForm({
             name="clave"
             value={form.clave}
             onChange={handleChange}
-            placeholder="Ej. ISC"
+            placeholder="Ej. 260125"
+            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-700">
+            RVOE
+          </label>
+
+          <input
+            type="text"
+            name="rvoe"
+            value={form.rvoe}
+            onChange={handleChange}
+            placeholder="Ej. RVOE-BC-053-M2/14"
             className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
             required
           />
