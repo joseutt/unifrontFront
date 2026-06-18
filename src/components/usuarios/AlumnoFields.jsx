@@ -5,6 +5,9 @@ export default function AlumnoFields({
   form,
   carreras,
   planesDisponibles,
+  gruposDisponibles,
+  periodos,
+  matriculaSugerida,
   onChange,
 }) {
   return (
@@ -16,11 +19,10 @@ export default function AlumnoFields({
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Field label="Matricula">
           <input
-            className={inputClass}
+            className={`${inputClass} bg-slate-50 text-slate-600`}
             name="matricula"
-            value={form.matricula}
-            onChange={onChange}
-            required
+            value={matriculaSugerida}
+            readOnly
           />
         </Field>
 
@@ -63,6 +65,54 @@ export default function AlumnoFields({
             {planesDisponibles.map((plan) => (
               <option key={plan.id_plan} value={plan.id_plan}>
                 {plan.nombre_plan}
+              </option>
+            ))}
+          </select>
+        </Field>
+
+        <Field label="Grupo">
+          <select
+            className={inputClass}
+            name="id_grupo"
+            value={form.id_grupo}
+            onChange={onChange}
+            required
+            disabled={!form.id_carrera}
+          >
+            <option value="">Selecciona grupo</option>
+            {gruposDisponibles.map((grupo) => (
+              <option key={grupo.id_grupo} value={grupo.id_grupo}>
+                {[
+                  grupo.nombre || `Grupo ${grupo.id_grupo}`,
+                  grupo.turno,
+                  grupo.id_cuatrimestre
+                    ? `Cuatrimestre ${grupo.id_cuatrimestre}`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" - ")}
+              </option>
+            ))}
+          </select>
+        </Field>
+
+        <Field label="Periodo">
+          <select
+            className={inputClass}
+            name="id_periodo"
+            value={form.id_periodo}
+            onChange={onChange}
+            required
+          >
+            <option value="">Selecciona periodo</option>
+            {periodos.map((periodo) => (
+              <option key={periodo.id_periodo} value={periodo.id_periodo}>
+                {[
+                  periodo.nombre || `Periodo ${periodo.id_periodo}`,
+                  periodo.estado === "ACTIVO" ? "ACTIVO" : null,
+                ]
+                  .filter(Boolean)
+                  .join(" - ")}
               </option>
             ))}
           </select>

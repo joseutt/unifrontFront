@@ -12,9 +12,14 @@ import {
   tutorInicial,
   usuarioInicial,
 } from "../components/usuarios/usuarioFormConfig";
+import { obtenerGrupos } from "../services/alumnosGruposService";
 import { obtenerCarreras } from "../services/carrerasService";
+import { obtenerPeriodos } from "../services/periodosService";
 import { obtenerPlanesEstudio } from "../services/planesEstudioService";
-import { crearUsuarioPorRol } from "../services/usuariosService";
+import {
+  crearUsuarioPorRol,
+  obtenerSiguienteMatriculaAlumno,
+} from "../services/usuariosService";
 
 const limpiarPayload = (payload) => {
   return Object.fromEntries(
@@ -45,6 +50,14 @@ const tieneValores = (payload) => {
   );
 };
 
+const obtenerPeriodoActivoId = (periodos = []) => {
+  return (
+    periodos.find((periodo) => periodo.estado === "ACTIVO")?.id_periodo ||
+    periodos[0]?.id_periodo ||
+    ""
+  );
+};
+
 export default function UsuariosAltaPage() {
   const navigate = useNavigate();
   const [rol, setRol] = useState("ALUMNO");
@@ -61,6 +74,9 @@ export default function UsuariosAltaPage() {
   );
   const [carreras, setCarreras] = useState([]);
   const [planes, setPlanes] = useState([]);
+  const [grupos, setGrupos] = useState([]);
+  const [periodos, setPeriodos] = useState([]);
+  const [matriculaSugerida, setMatriculaSugerida] = useState("");
   const [loading, setLoading] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState("");
@@ -69,18 +85,39 @@ export default function UsuariosAltaPage() {
   useEffect(() => {
     let activo = true;
 
-    Promise.all([obtenerCarreras(), obtenerPlanesEstudio()])
-      .then(([carrerasResponse, planesResponse]) => {
+    Promise.all([
+      obtenerCarreras(),
+      obtenerPlanesEstudio(),
+      obtenerGrupos(),
+      obtenerPeriodos(),
+      obtenerSiguienteMatriculaAlumno(),
+    ]).then(
+      ([
+        carrerasResponse,
+        planesResponse,
+        gruposResponse,
+        periodosResponse,
+        matriculaResponse,
+      ]) => {
         if (activo) {
           setCarreras(carrerasResponse);
           setPlanes(planesResponse);
+          setGrupos(gruposResponse);
+          setPeriodos(periodosResponse);
+          setMatriculaSugerida(matriculaResponse);
+          setAlumnoForm((prev) => ({
+            ...prev,
+            id_periodo:
+              prev.id_periodo || obtenerPeriodoActivoId(periodosResponse),
+          }));
         }
-      })
+      },
+    )
       .catch((requestError) => {
         console.error(requestError);
 
         if (activo) {
-          setError("No se pudieron cargar carreras y planes.");
+          setError("No se pudieron cargar los catalogos del formulario.");
         }
       })
       .finally(() => {
@@ -104,9 +141,22 @@ export default function UsuariosAltaPage() {
     );
   }, [planes, alumnoForm.id_carrera]);
 
+  const gruposDisponibles = useMemo(() => {
+    if (!alumnoForm.id_carrera) {
+      return grupos;
+    }
+
+    return grupos.filter(
+      (grupo) => grupo.id_carrera === Number(alumnoForm.id_carrera),
+    );
+  }, [grupos, alumnoForm.id_carrera]);
+
   const resetForm = () => {
     setUsuarioForm(usuarioInicial);
-    setAlumnoForm(alumnoInicial);
+    setAlumnoForm({
+      ...alumnoInicial,
+      id_periodo: obtenerPeriodoActivoId(periodos),
+    });
     setDocenteForm(docenteInicial);
     setTutorForm(tutorInicial);
     setContactosEmergenciaForm([
@@ -132,7 +182,7 @@ export default function UsuariosAltaPage() {
     setAlumnoForm((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "id_carrera" ? { id_plan: "" } : {}),
+      ...(name === "id_carrera" ? { id_plan: "", id_grupo: "" } : {}),
     }));
   };
 
@@ -191,12 +241,23 @@ export default function UsuariosAltaPage() {
 
   const prepararAlumno = () => {
     const data = limpiarPayload(alumnoForm);
+    delete data.matricula;
 
-    return {
+    const alumno = {
       ...data,
       id_carrera: Number(data.id_carrera),
       id_plan: Number(data.id_plan),
     };
+
+    if (data.id_grupo) {
+      alumno.id_grupo = Number(data.id_grupo);
+    }
+
+    if (data.id_periodo) {
+      alumno.id_periodo = Number(data.id_periodo);
+    }
+
+    return alumno;
   };
 
   const prepararTutor = () => {
@@ -275,6 +336,13 @@ export default function UsuariosAltaPage() {
 
       setMensaje("Usuario creado correctamente.");
       resetForm();
+
+      try {
+        setMatriculaSugerida(await obtenerSiguienteMatriculaAlumno());
+      } catch (matriculaError) {
+        console.error(matriculaError);
+        setMatriculaSugerida("");
+      }
     } catch (requestError) {
       console.error(requestError);
       setError(obtenerMensajeError(requestError));
@@ -329,6 +397,9 @@ export default function UsuariosAltaPage() {
           procedenciaAcademicaForm={procedenciaAcademicaForm}
           carreras={carreras}
           planesDisponibles={planesDisponibles}
+          gruposDisponibles={gruposDisponibles}
+          periodos={periodos}
+          matriculaSugerida={matriculaSugerida}
           mensaje=""
           error=""
           guardando={guardando}

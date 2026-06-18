@@ -14,6 +14,8 @@ export const alumnoInicial = {
   numero_control: "",
   id_carrera: "",
   id_plan: "",
+  id_grupo: "",
+  id_periodo: "",
   fecha_nacimiento: "",
   ciudad_nacimiento: "",
   municipio_nacimiento: "",
