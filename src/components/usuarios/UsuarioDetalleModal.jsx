@@ -56,10 +56,16 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
         <Section title="Usuario">
           <dl className="grid grid-cols-1 gap-5 md:grid-cols-3">
             <DetailItem label="Nombre" value={usuario.nombre} />
-            <DetailItem label="Apellido paterno" value={usuario.apellido_paterno} />
-            <DetailItem label="Apellido materno" value={usuario.apellido_materno} />
+            <DetailItem
+              label="Apellido paterno"
+              value={usuario.apellido_paterno}
+            />
+            <DetailItem
+              label="Apellido materno"
+              value={usuario.apellido_materno}
+            />
             <DetailItem label="Correo" value={usuario.correo} />
-            <DetailItem label="Telefono" value={usuario.telefono} />
+            <DetailItem label="Teléfono" value={usuario.telefono} />
             <DetailItem label="Estado" value={usuario.estado} />
           </dl>
         </Section>
@@ -68,14 +74,23 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
           <Section title="Alumno">
             <dl className="grid grid-cols-1 gap-5 md:grid-cols-3">
               <DetailItem label="Matricula" value={alumno.matricula} />
-              <DetailItem label="Numero de control" value={alumno.numero_control} />
+              <DetailItem
+                label="Número de control"
+                value={alumno.numero_control}
+              />
               <DetailItem label="Estatus" value={alumno.estatus} />
               <DetailItem label="Carrera" value={alumno.carrera?.nombre} />
               <DetailItem label="Plan" value={alumno.plan?.nombre_plan} />
               <DetailItem label="CURP" value={alumno.curp} />
-              <DetailItem label="Fecha nacimiento" value={alumno.fecha_nacimiento} />
+              <DetailItem
+                label="Fecha nacimiento"
+                value={alumno.fecha_nacimiento}
+              />
               <DetailItem label="Fecha ingreso" value={alumno.fecha_ingreso} />
-              <DetailItem label="Correo contacto" value={alumno.correo_contacto} />
+              <DetailItem
+                label="Correo contacto"
+                value={alumno.correo_contacto}
+              />
             </dl>
           </Section>
         )}
@@ -83,11 +98,20 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
         {docente && (
           <Section title="Docente">
             <dl className="grid grid-cols-1 gap-5 md:grid-cols-3">
-              <DetailItem label="Numero empleado" value={docente.numero_empleado} />
+              <DetailItem
+                label="Número empleado"
+                value={docente.numero_empleado}
+              />
               <DetailItem label="Especialidad" value={docente.especialidad} />
-              <DetailItem label="Grado academico" value={docente.grado_academico} />
+              <DetailItem
+                label="Grado académico"
+                value={docente.grado_academico}
+              />
               <DetailItem label="Fecha ingreso" value={docente.fecha_ingreso} />
-              <DetailItem label="Estado" value={docente.estado ? "Activo" : "Inactivo"} />
+              <DetailItem
+                label="Estado"
+                value={docente.estado ? "Activo" : "Inactivo"}
+              />
             </dl>
           </Section>
         )}
@@ -104,7 +128,9 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
                       key={tutor.id_tutor}
                       className="rounded-lg border border-slate-200 p-4"
                     >
-                      <p className="font-semibold text-slate-900">{tutor.nombre}</p>
+                      <p className="font-semibold text-slate-900">
+                        {tutor.nombre}
+                      </p>
                       <p className="text-sm text-slate-500">
                         {tutor.parentesco || "Sin parentesco"} -{" "}
                         {tutor.telefono || "Sin telefono"}
@@ -154,7 +180,9 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
             <Section title="Seguro y procedencia">
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="rounded-lg border border-slate-200 p-4">
-                  <h4 className="font-semibold text-slate-900">Seguro medico</h4>
+                  <h4 className="font-semibold text-slate-900">
+                    Seguro medico
+                  </h4>
                   {expediente.seguros_medicos.length === 0 ? (
                     <EmptyText />
                   ) : (
@@ -164,8 +192,14 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
                           label="Tiene seguro"
                           value={seguro.tiene_seguro ? "Si" : "No"}
                         />
-                        <DetailItem label="Institucion" value={seguro.institucion} />
-                        <DetailItem label="Poliza" value={seguro.numero_poliza} />
+                        <DetailItem
+                          label="Institución"
+                          value={seguro.institucion}
+                        />
+                        <DetailItem
+                          label="Póliza"
+                          value={seguro.numero_poliza}
+                        />
                       </dl>
                     ))
                   )}
@@ -173,13 +207,15 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
 
                 <div className="rounded-lg border border-slate-200 p-4">
                   <h4 className="font-semibold text-slate-900">
-                    Procedencia academica
+                    Procedencia académica
                   </h4>
                   {expediente.procedencia_academica ? (
                     <dl className="mt-3 space-y-2">
                       <DetailItem
                         label="Escuela"
-                        value={expediente.procedencia_academica.escuela_procedencia}
+                        value={
+                          expediente.procedencia_academica.escuela_procedencia
+                        }
                       />
                       <DetailItem
                         label="Nivel"
@@ -187,7 +223,9 @@ export default function UsuarioDetalleModal({ detalle, onClose }) {
                       />
                       <DetailItem
                         label="Promedio"
-                        value={expediente.procedencia_academica.promedio_general}
+                        value={
+                          expediente.procedencia_academica.promedio_general
+                        }
                       />
                     </dl>
                   ) : (

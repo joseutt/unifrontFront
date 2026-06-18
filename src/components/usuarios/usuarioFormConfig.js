@@ -1,12 +1,14 @@
 import { GraduationCap, IdCard, ShieldCheck } from "lucide-react";
 
+export const DEFAULT_USER_PASSWORD = "Unifront2026";
+
 export const usuarioInicial = {
   nombre: "",
   apellido_paterno: "",
   apellido_materno: "",
   correo: "",
   telefono: "",
-  password: "",
+  password: DEFAULT_USER_PASSWORD,
 };
 
 export const alumnoInicial = {
@@ -14,6 +16,8 @@ export const alumnoInicial = {
   numero_control: "",
   id_carrera: "",
   id_plan: "",
+  id_grupo: "",
+  id_periodo: "",
   fecha_nacimiento: "",
   ciudad_nacimiento: "",
   municipio_nacimiento: "",

@@ -18,6 +18,9 @@ export default function UsuarioForm({
   procedenciaAcademicaForm,
   carreras,
   planesDisponibles,
+  gruposDisponibles,
+  periodos,
+  matriculaSugerida,
   mensaje,
   error,
   guardando,
@@ -67,6 +70,9 @@ export default function UsuarioForm({
           form={alumnoForm}
           carreras={carreras}
           planesDisponibles={planesDisponibles}
+          gruposDisponibles={gruposDisponibles}
+          periodos={periodos}
+          matriculaSugerida={matriculaSugerida}
           onChange={onAlumnoChange}
         />
       )}

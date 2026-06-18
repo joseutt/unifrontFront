@@ -9,7 +9,7 @@ export default function DocenteFields({ form, onChange }) {
       </h3>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Field label="Numero de empleado">
+        <Field label="Número de empleado">
           <input
             className={inputClass}
             name="numero_empleado"
@@ -18,7 +18,7 @@ export default function DocenteFields({ form, onChange }) {
           />
         </Field>
 
-        <Field label="Grado academico">
+        <Field label="Grado académico">
           <input
             className={inputClass}
             name="grado_academico"

@@ -17,6 +17,10 @@ export default function CarreraListCard({ carreras, onEliminar, onEditar }) {
             </th>
 
             <th className="px-6 py-4 text-left text-sm font-semibold text-slate-600">
+              RVOE
+            </th>
+
+            <th className="px-6 py-4 text-left text-sm font-semibold text-slate-600">
               Nombre
             </th>
 
@@ -35,6 +39,12 @@ export default function CarreraListCard({ carreras, onEliminar, onEditar }) {
                     {carrera.clave}
                   </span>
                 </div>
+              </td>
+
+              <td className="px-6 py-5">
+                <span className="font-medium text-slate-700">
+                  {carrera.rvoe || "Sin RVOE"}
+                </span>
               </td>
 
               <td className="px-6 py-5 font-medium text-slate-900">

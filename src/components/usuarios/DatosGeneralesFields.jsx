@@ -1,5 +1,8 @@
 import Field from "./Field";
-import { inputClass } from "./usuarioFormConfig";
+import { DEFAULT_USER_PASSWORD, inputClass } from "./usuarioFormConfig";
+
+const lockedInputClass =
+  "w-full cursor-not-allowed rounded-lg border border-slate-300 bg-slate-100 px-4 py-3 text-sm text-slate-500 outline-none ring-1 ring-slate-200";
 
 export default function DatosGeneralesFields({ form, onChange }) {
   return (
@@ -9,7 +12,7 @@ export default function DatosGeneralesFields({ form, onChange }) {
       </h3>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Field label="Nombre">
+        <Field label="Nombre" required>
           <input
             className={inputClass}
             name="nombre"
@@ -19,7 +22,7 @@ export default function DatosGeneralesFields({ form, onChange }) {
           />
         </Field>
 
-        <Field label="Apellido paterno">
+        <Field label="Apellido paterno" required>
           <input
             className={inputClass}
             name="apellido_paterno"
@@ -38,7 +41,7 @@ export default function DatosGeneralesFields({ form, onChange }) {
           />
         </Field>
 
-        <Field label="Teléfono">
+        <Field label="Teléfono" required>
           <input
             className={inputClass}
             name="telefono"
@@ -48,7 +51,7 @@ export default function DatosGeneralesFields({ form, onChange }) {
           />
         </Field>
 
-        <Field label="Correo Institucional">
+        <Field label="Correo Institucional" required>
           <input
             className={inputClass}
             type="email"
@@ -59,13 +62,14 @@ export default function DatosGeneralesFields({ form, onChange }) {
           />
         </Field>
 
-        <Field label="Contraseña">
+        <Field label="Contraseña default" required>
           <input
-            className={inputClass}
-            type="password"
+            className={lockedInputClass}
+            type="text"
             name="password"
-            value={form.password}
-            onChange={onChange}
+            value={form.password || DEFAULT_USER_PASSWORD}
+            readOnly
+            aria-readonly="true"
             required
             minLength={6}
           />

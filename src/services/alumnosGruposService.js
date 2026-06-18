@@ -12,6 +12,12 @@ export const obtenerGruposMaterias = async () => {
   return response.data;
 };
 
+export const obtenerGrupos = async () => {
+  const response = await api.get("/grupos");
+
+  return response.data;
+};
+
 export const obtenerPeriodos = async () => {
   const response = await api.get("/periodos");
 

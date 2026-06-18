@@ -60,6 +60,12 @@ export const crearAlumno = async (data) => {
   return response.data;
 };
 
+export const obtenerSiguienteMatriculaAlumno = async () => {
+  const response = await api.get("/alumnos/siguiente-matricula");
+
+  return response.data?.matricula || "";
+};
+
 export const crearDocente = async (data) => {
   const response = await api.post("/docentes", data);
 

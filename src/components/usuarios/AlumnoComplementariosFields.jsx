@@ -58,7 +58,7 @@ export default function AlumnoComplementariosFields({
             />
           </Field>
 
-          <Field label="Telefono">
+          <Field label="Teléfono">
             <input
               className={inputClass}
               name="telefono"
@@ -77,7 +77,7 @@ export default function AlumnoComplementariosFields({
             />
           </Field>
 
-          <Field label="Ocupacion">
+          <Field label="Ocupación">
             <input
               className={inputClass}
               name="ocupacion"
@@ -149,7 +149,7 @@ export default function AlumnoComplementariosFields({
                 />
               </Field>
 
-              <Field label="Telefono">
+              <Field label="Teléfono">
                 <input
                   className={inputClass}
                   name="telefono"
@@ -173,7 +173,7 @@ export default function AlumnoComplementariosFields({
               </Field>
 
               <div className="md:col-span-2">
-                <Field label="Direccion">
+                <Field label="Dirección">
                   <textarea
                     className={inputClass}
                     name="direccion"
@@ -212,29 +212,35 @@ export default function AlumnoComplementariosFields({
             onChange={onSeguroMedicoChange}
           />
 
-          <Field label="Institucion">
-            <input
-              className={inputClass}
-              name="institucion"
-              value={seguroMedicoForm.institucion}
-              onChange={onSeguroMedicoChange}
-            />
-          </Field>
+          {seguroMedicoForm.tiene_seguro && (
+            <>
+              <Field label="Institución" required>
+                <input
+                  className={inputClass}
+                  name="institucion"
+                  value={seguroMedicoForm.institucion}
+                  onChange={onSeguroMedicoChange}
+                  required
+                />
+              </Field>
 
-          <Field label="Numero de poliza">
-            <input
-              className={inputClass}
-              name="numero_poliza"
-              value={seguroMedicoForm.numero_poliza}
-              onChange={onSeguroMedicoChange}
-            />
-          </Field>
+              <Field label="Número de póliza" required>
+                <input
+                  className={inputClass}
+                  name="numero_poliza"
+                  value={seguroMedicoForm.numero_poliza}
+                  onChange={onSeguroMedicoChange}
+                  required
+                />
+              </Field>
+            </>
+          )}
         </div>
       </div>
 
       <div className="space-y-4">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Procedencia academica
+          Procedencia académica
         </h3>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -247,7 +253,7 @@ export default function AlumnoComplementariosFields({
             />
           </Field>
 
-          <Field label="Nivel academico">
+          <Field label="Nivel académico">
             <select
               className={inputClass}
               name="nivel_academico"
