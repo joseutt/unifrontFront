@@ -5,6 +5,14 @@ import { useAuth } from "../context/authStore";
 import { useNavigate } from "react-router-dom";
 import { consumeSessionExpiredMessage } from "../services/session";
 
+const getDefaultPath = (user) => {
+  const roles = user?.roles?.map((role) => role.nombre) || [];
+  const isOnlyAlumno =
+    roles.includes("ALUMNO") && roles.every((role) => role === "ALUMNO");
+
+  return isOnlyAlumno ? "/alumno/boleta-final" : "/dashboard";
+};
+
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -26,7 +34,7 @@ function Login() {
 
       login(data.access_token, data.user);
 
-      navigate("/dashboard");
+      navigate(getDefaultPath(data.user));
     } catch (err) {
       console.error(err);
 

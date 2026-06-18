@@ -9,8 +9,10 @@ import {
   GraduationCap,
   Library,
   User,
+  FileText,
   FileStack,
   FileSpreadsheet,
+  KeyRound,
 } from "lucide-react";
 
 export const sidebarSections = [
@@ -134,6 +136,31 @@ export const sidebarSections = [
         label: "Reportes",
         path: "/reportes-fundamentales",
         roles: ["ADMIN", "CONTROL_ESCOLAR"],
+      },
+    ],
+  },
+
+  {
+    title: "Alumno",
+
+    items: [
+      {
+        icon: KeyRound,
+        label: "Mi perfil",
+        path: "/alumno/perfil",
+        roles: ["ALUMNO"],
+      },
+      {
+        icon: FileText,
+        label: "Mi boleta final",
+        path: "/alumno/boleta-final",
+        roles: ["ALUMNO"],
+      },
+      {
+        icon: BookOpen,
+        label: "Mi kardex",
+        path: "/alumno/kardex",
+        roles: ["ALUMNO"],
       },
     ],
   },

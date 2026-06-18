@@ -1,4 +1,5 @@
 import axios from "axios";
+import api from "./api";
 
 const API_URL = "http://localhost:8000";
 
@@ -14,6 +15,18 @@ export const loginRequest = async (email, password) => {
       "Content-Type": "application/x-www-form-urlencoded",
     },
   });
+
+  return response.data;
+};
+
+export const obtenerMiExpediente = async () => {
+  const response = await api.get("/auth/me/expediente");
+
+  return response.data;
+};
+
+export const actualizarMiPassword = async (data) => {
+  const response = await api.patch("/auth/me/password", data);
 
   return response.data;
 };

@@ -15,6 +15,7 @@ function Sidebar({ isOpen, onToggle }) {
     Académico: true,
     Escolar: true,
     Docentes: true,
+    Alumno: true,
     Administración: true,
     Documentos: true,
   });

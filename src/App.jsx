@@ -25,6 +25,7 @@ import RegistroReinscripcionAlumnos from "./pages/RegistroReinscripcionAlumnos";
 import PromediosGrupo from "./pages/PromediosGrupos";
 import RezagoCarreras from "./pages/RezagoCarreras";
 import Kardex from "./pages/Kardex"
+import AlumnoPerfilPage from "./pages/AlumnoPerfilPage";
 
 // function CuadroHonorPage() {
 //   return (
@@ -259,6 +260,28 @@ function App() {
         />
 
         <Route
+          path="/alumno/perfil"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <AlumnoPerfilPage />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/alumno/boleta-final"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <BoletaFinal modoAlumno />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/documentos-alumno/:alumnoId"
           element={
             <ProtectedRoute>
@@ -300,6 +323,17 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <Kardex/>
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route 
+          path="/alumno/kardex"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Kardex modoAlumno />
               </MainLayout>
             </ProtectedRoute>
           }
