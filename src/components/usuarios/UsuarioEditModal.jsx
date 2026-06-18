@@ -58,7 +58,7 @@ export default function UsuarioEditModal({ usuario, guardando, onClose, onSubmit
         </div>
 
         <div className="grid grid-cols-1 gap-4 px-6 py-6 md:grid-cols-2">
-          <Field label="Nombre">
+          <Field label="Nombre" required>
             <input
               className={inputClass}
               name="nombre"
@@ -68,7 +68,7 @@ export default function UsuarioEditModal({ usuario, guardando, onClose, onSubmit
             />
           </Field>
 
-          <Field label="Apellido paterno">
+          <Field label="Apellido paterno" required>
             <input
               className={inputClass}
               name="apellido_paterno"
@@ -96,7 +96,7 @@ export default function UsuarioEditModal({ usuario, guardando, onClose, onSubmit
             />
           </Field>
 
-          <Field label="Correo">
+          <Field label="Correo" required>
             <input
               className={inputClass}
               type="email"

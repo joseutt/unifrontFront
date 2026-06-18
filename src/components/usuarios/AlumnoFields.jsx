@@ -1,6 +1,9 @@
 import Field from "./Field";
 import { inputClass } from "./usuarioFormConfig";
 
+const lockedInputClass =
+  "w-full cursor-not-allowed rounded-lg border border-slate-300 bg-slate-100 px-4 py-3 text-sm text-slate-500 outline-none ring-1 ring-slate-200";
+
 export default function AlumnoFields({
   form,
   carreras,
@@ -17,16 +20,18 @@ export default function AlumnoFields({
       </h3>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Field label="Matricula">
+        <Field label="Matricula" required>
           <input
-            className={`${inputClass} bg-slate-50 text-slate-600`}
+            className={lockedInputClass}
             name="matricula"
             value={matriculaSugerida}
             readOnly
+            aria-readonly="true"
+            tabIndex={-1}
           />
         </Field>
 
-        <Field label="Numero de control">
+        <Field label="Número de control">
           <input
             className={inputClass}
             name="numero_control"
@@ -35,7 +40,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Carrera">
+        <Field label="Carrera" required>
           <select
             className={inputClass}
             name="id_carrera"
@@ -52,7 +57,7 @@ export default function AlumnoFields({
           </select>
         </Field>
 
-        <Field label="Plan de estudio">
+        <Field label="Plan de estudio" required>
           <select
             className={inputClass}
             name="id_plan"
@@ -70,7 +75,7 @@ export default function AlumnoFields({
           </select>
         </Field>
 
-        <Field label="Grupo">
+        <Field label="Grupo" required>
           <select
             className={inputClass}
             name="id_grupo"
@@ -96,7 +101,7 @@ export default function AlumnoFields({
           </select>
         </Field>
 
-        <Field label="Periodo">
+        <Field label="Periodo" required>
           <select
             className={inputClass}
             name="id_periodo"
@@ -118,7 +123,7 @@ export default function AlumnoFields({
           </select>
         </Field>
 
-        <Field label="Fecha de nacimiento">
+        <Field label="Fecha de nacimiento" required>
           <input
             className={inputClass}
             type="date"
@@ -129,7 +134,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Fecha de ingreso">
+        <Field label="Fecha de ingreso" required>
           <input
             className={inputClass}
             type="date"
@@ -140,7 +145,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Sexo">
+        <Field label="Sexo" required>
           <select
             className={inputClass}
             name="sexo"
@@ -156,7 +161,7 @@ export default function AlumnoFields({
           </select>
         </Field>
 
-        <Field label="CURP">
+        <Field label="CURP" required>
           <input
             className={inputClass}
             name="curp"
@@ -167,7 +172,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Nacionalidad">
+        <Field label="Nacionalidad" required>
           <input
             className={inputClass}
             name="nacionalidad"
@@ -177,7 +182,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Correo de contacto">
+        <Field label="Correo de contacto" required>
           <input
             className={inputClass}
             type="email"
@@ -188,7 +193,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Ciudad de nacimiento">
+        <Field label="Ciudad de nacimiento" required>
           <input
             className={inputClass}
             name="ciudad_nacimiento"
@@ -198,7 +203,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Municipio de nacimiento">
+        <Field label="Municipio de nacimiento" required>
           <input
             className={inputClass}
             name="municipio_nacimiento"
@@ -208,7 +213,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Ciudad">
+        <Field label="Ciudad" required>
           <input
             className={inputClass}
             name="ciudad"
@@ -218,7 +223,7 @@ export default function AlumnoFields({
           />
         </Field>
 
-        <Field label="Estado">
+        <Field label="Estado" required>
           <input
             className={inputClass}
             name="estado"
@@ -229,7 +234,7 @@ export default function AlumnoFields({
         </Field>
 
         <div className="md:col-span-2">
-          <Field label="Direccion">
+          <Field label="Dirección" required>
             <textarea
               className={inputClass}
               name="direccion"

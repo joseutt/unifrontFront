@@ -6,6 +6,7 @@ import UsuarioForm from "../components/usuarios/UsuarioForm";
 import {
   alumnoInicial,
   contactoEmergenciaInicial,
+  DEFAULT_USER_PASSWORD,
   docenteInicial,
   procedenciaAcademicaInicial,
   seguroMedicoInicial,
@@ -186,6 +187,26 @@ export default function UsuariosAltaPage() {
     }));
   };
 
+  const handleSeguroMedicoChange = (event) => {
+    const { name, value, type, checked } = event.target;
+
+    setSeguroMedicoForm((prev) => {
+      if (name === "tiene_seguro" && !checked) {
+        return {
+          ...prev,
+          tiene_seguro: false,
+          institucion: "",
+          numero_poliza: "",
+        };
+      }
+
+      return {
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      };
+    });
+  };
+
   const handleContactoEmergenciaChange = (id, event) => {
     const { name, value, type, checked } = event.target;
 
@@ -293,6 +314,10 @@ export default function UsuariosAltaPage() {
   };
 
   const prepararSeguroMedico = () => {
+    if (!seguroMedicoForm.tiene_seguro) {
+      return undefined;
+    }
+
     if (!tieneValores(seguroMedicoForm)) {
       return undefined;
     }
@@ -323,7 +348,10 @@ export default function UsuariosAltaPage() {
     try {
       await crearUsuarioPorRol({
         rol,
-        usuario: limpiarPayload(usuarioForm),
+        usuario: {
+          ...limpiarPayload(usuarioForm),
+          password: usuarioForm.password || DEFAULT_USER_PASSWORD,
+        },
         alumno: rol === "ALUMNO" ? prepararAlumno() : undefined,
         docente: rol === "DOCENTE" ? limpiarPayload(docenteForm) : undefined,
         tutor: rol === "ALUMNO" ? prepararTutor() : undefined,
@@ -411,7 +439,7 @@ export default function UsuariosAltaPage() {
           onContactoEmergenciaChange={handleContactoEmergenciaChange}
           onAgregarContactoEmergencia={handleAgregarContactoEmergencia}
           onEliminarContactoEmergencia={handleEliminarContactoEmergencia}
-          onSeguroMedicoChange={handleSimpleChange(setSeguroMedicoForm)}
+          onSeguroMedicoChange={handleSeguroMedicoChange}
           onProcedenciaAcademicaChange={handleSimpleChange(
             setProcedenciaAcademicaForm,
           )}
