@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { BookOpen, Download } from "lucide-react";
 import {
   buscarAlumnosKardex,
+  obtenerMiKardex,
   obtenerKardexPorBusqueda,
   obtenerKardexPorMatricula,
 } from "../services/kardexService";
 import unifrontLogoColor from "../assets/UnifrontLogoColorSinFondo.png";
 
-const Kardex = () => {
+const Kardex = ({ modoAlumno = false }) => {
   const [matriculaInput, setMatriculaInput] = useState("");
   const [kardex, setKardex] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,52 @@ const Kardex = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!modoAlumno) {
+      return undefined;
+    }
+
+    let activo = true;
+
+    const cargarMiKardex = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        setMostrarSugerencias(false);
+
+        const data = await obtenerMiKardex();
+
+        if (!activo) return;
+
+        setKardex(data);
+        setMatriculaInput(data.matricula || "");
+      } catch (err) {
+        console.error(err);
+
+        if (activo) {
+          setKardex(null);
+          setError("No se pudo cargar tu kardex.");
+        }
+      } finally {
+        if (activo) {
+          setLoading(false);
+        }
+      }
+    };
+
+    cargarMiKardex();
+
+    return () => {
+      activo = false;
+    };
+  }, [modoAlumno]);
+
+  useEffect(() => {
+    if (modoAlumno) {
+      setSugerencias([]);
+      setMostrarSugerencias(false);
+      return undefined;
+    }
+
     const termino = String(matriculaInput || "").trim();
 
     if (termino.length < 2) {
@@ -40,9 +87,11 @@ const Kardex = () => {
     }, 250);
 
     return () => window.clearTimeout(timeout);
-  }, [matriculaInput]);
+  }, [matriculaInput, modoAlumno]);
 
   const handleBuscar = async (terminoForzado) => {
+    if (modoAlumno) return;
+
     const termino = String(terminoForzado || matriculaInput || "").trim();
     setError("");
     setKardex(null);
@@ -498,8 +547,14 @@ const Kardex = () => {
             <BookOpen size={22} />
           </div>
           <div>
-            <h1 className="kx-page-title">Kardex del alumno</h1>
-            <p className="kx-page-sub">Ingresa una matrícula o nombre para consultar el kardex académico.</p>
+            <h1 className="kx-page-title">
+              {modoAlumno ? "Mi kardex" : "Kardex del alumno"}
+            </h1>
+            <p className="kx-page-sub">
+              {modoAlumno
+                ? "Consulta tu historial academico."
+                : "Ingresa una matricula o nombre para consultar el kardex academico."}
+            </p>
           </div>
         </div>
         <button className="kx-btn-pdf" onClick={handlePrint} disabled={!kardex}>
@@ -511,11 +566,12 @@ const Kardex = () => {
       <div className="h-px w-full bg-slate-200" />
 
       {/* ── Barra de búsqueda ── */}
-      <div className="kx-search">
+      {!modoAlumno && (
+        <div className="kx-search">
         <div className="kx-search-field">
           <input
             type="text"
-            placeholder="Busca por matrícula o nombre"
+            placeholder="Busca por matricula o nombre"
             value={matriculaInput}
             onChange={(e) => setMatriculaInput(e.target.value)}
             onFocus={() => {
@@ -554,7 +610,8 @@ const Kardex = () => {
         <button className="kx-btn-buscar" onClick={() => handleBuscar()} disabled={loading}>
           {loading ? "Buscando..." : "Buscar"}
         </button>
-      </div>
+        </div>
+      )}
 
       {error && <div className="kx-error">{error}</div>}
 
@@ -580,9 +637,21 @@ const Kardex = () => {
         <hr className="kd-rule" />
 
         {!kardex && !loading && (
-          <div className="kd-empty">Ingresa una matrícula o nombre y presiona <b>Buscar</b> para ver el kardex.</div>
+          <div className="kd-empty">
+            {modoAlumno ? (
+              "No hay kardex disponible para tu perfil."
+            ) : (
+              <>
+                Ingresa una matricula o nombre y presiona <b>Buscar</b> para ver el kardex.
+              </>
+            )}
+          </div>
         )}
-        {loading && <div className="kd-empty">Cargando…</div>}
+        {loading && (
+          <div className="kd-empty">
+            {modoAlumno ? "Cargando tu kardex..." : "Cargando..."}
+          </div>
+        )}
 
         {kardex && (
           <>
@@ -644,9 +713,10 @@ const Kardex = () => {
 
             {/* Bloques por cuatrimestre */}
             {kardex.historial.map((cuatri) => {
-              const promedio =
-                cuatri.materias.reduce((s, m) => s + m.calificacion_final, 0) /
-                cuatri.materias.length;
+              const promedio = cuatri.materias.length
+                ? cuatri.materias.reduce((s, m) => s + m.calificacion_final, 0) /
+                  cuatri.materias.length
+                : 0;
 
               return (
                 <div key={cuatri.cuatrimestre} className="kd-block">

@@ -37,6 +37,16 @@ export const obtenerBoletaFinal = async ({ alumnoId, periodoId }) => {
   return response.data;
 };
 
+export const obtenerMiBoletaFinal = async ({ periodoId }) => {
+  const response = await api.get("/calificaciones/boleta-final/me", {
+    params: {
+      periodo_id: periodoId,
+    },
+  });
+
+  return response.data;
+};
+
 export const obtenerCuadroHonor = async ({ cuatrimestre, egresados }) => {
   const response = await api.get("/calificaciones/cuadro-honor", {
     params: egresados

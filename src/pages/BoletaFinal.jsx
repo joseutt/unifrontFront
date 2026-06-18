@@ -5,7 +5,10 @@ import {
   obtenerAlumnosDetalle,
   obtenerPeriodos,
 } from "../services/alumnosGruposService";
-import { obtenerBoletaFinal } from "../services/calificacionesService";
+import {
+  obtenerBoletaFinal,
+  obtenerMiBoletaFinal,
+} from "../services/calificacionesService";
 
 const meses = [
   "Enero",
@@ -117,7 +120,7 @@ const filasBoleta = (materias = []) => {
   return filas;
 };
 
-export default function BoletaFinal() {
+export default function BoletaFinal({ modoAlumno = false }) {
   const [form, setForm] = useState(initialForm);
   const [alumnos, setAlumnos] = useState([]);
   const [periodos, setPeriodos] = useState([]);
@@ -134,6 +137,15 @@ export default function BoletaFinal() {
       setError("");
 
       try {
+        if (modoAlumno) {
+          const periodosResponse = await obtenerPeriodos();
+
+          if (!activo) return;
+
+          setPeriodos(periodosResponse);
+          return;
+        }
+
         const [alumnosResponse, periodosResponse] = await Promise.all([
           obtenerAlumnosDetalle(),
           obtenerPeriodos(),
@@ -151,7 +163,11 @@ export default function BoletaFinal() {
         console.error(requestError);
 
         if (activo) {
-          setError("No se pudieron cargar alumnos y periodos.");
+          setError(
+            modoAlumno
+              ? "No se pudieron cargar los periodos."
+              : "No se pudieron cargar alumnos y periodos.",
+          );
         }
       } finally {
         if (activo) {
@@ -165,7 +181,7 @@ export default function BoletaFinal() {
     return () => {
       activo = false;
     };
-  }, []);
+  }, [modoAlumno]);
 
   const nombreSeparado = useMemo(
     () => separarNombre(boleta?.alumno?.nombre),
@@ -188,8 +204,12 @@ export default function BoletaFinal() {
   };
 
   const handleBuscar = async () => {
-    if (!form.alumnoId || !form.periodoId) {
-      setError("Selecciona un alumno y un ciclo escolar.");
+    if (!form.periodoId || (!modoAlumno && !form.alumnoId)) {
+      setError(
+        modoAlumno
+          ? "Selecciona un ciclo escolar."
+          : "Selecciona un alumno y un ciclo escolar.",
+      );
       return;
     }
 
@@ -197,10 +217,14 @@ export default function BoletaFinal() {
     setError("");
 
     try {
-      const response = await obtenerBoletaFinal({
-        alumnoId: form.alumnoId,
-        periodoId: form.periodoId,
-      });
+      const response = modoAlumno
+        ? await obtenerMiBoletaFinal({
+            periodoId: form.periodoId,
+          })
+        : await obtenerBoletaFinal({
+            alumnoId: form.alumnoId,
+            periodoId: form.periodoId,
+          });
 
       setBoleta(response);
     } catch (requestError) {
@@ -497,10 +521,12 @@ export default function BoletaFinal() {
 
           <div>
             <h1 className="text-4xl font-bold text-slate-900">
-              Boleta final
+              {modoAlumno ? "Mi boleta final" : "Boleta final"}
             </h1>
             <p className="mt-1 text-slate-500">
-              Selecciona el alumno y ciclo escolar para generar el formato.
+              {modoAlumno
+                ? "Consulta tu boleta final por ciclo escolar."
+                : "Selecciona el alumno y ciclo escolar para generar el formato."}
             </p>
           </div>
         </div>
@@ -531,28 +557,30 @@ export default function BoletaFinal() {
               </div>
             )}
 
-            <label className="block">
-              <span className="text-sm font-medium text-slate-700">
-                Alumno
-              </span>
-              <select
-                name="alumnoId"
-                value={form.alumnoId}
-                onChange={handleChange}
-                disabled={loading}
-                className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
-              >
-                <option value="">
-                  {loading ? "Cargando alumnos..." : "Selecciona un alumno"}
-                </option>
-                {alumnos.map((alumno) => (
-                  <option key={alumno.id_alumno} value={alumno.id_alumno}>
-                    {alumno.nombre || `Alumno #${alumno.id_alumno}`}
-                    {alumno.matricula ? ` - ${alumno.matricula}` : ""}
+            {!modoAlumno && (
+              <label className="block">
+                <span className="text-sm font-medium text-slate-700">
+                  Alumno
+                </span>
+                <select
+                  name="alumnoId"
+                  value={form.alumnoId}
+                  onChange={handleChange}
+                  disabled={loading}
+                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-100"
+                >
+                  <option value="">
+                    {loading ? "Cargando alumnos..." : "Selecciona un alumno"}
                   </option>
-                ))}
-              </select>
-            </label>
+                  {alumnos.map((alumno) => (
+                    <option key={alumno.id_alumno} value={alumno.id_alumno}>
+                      {alumno.nombre || `Alumno #${alumno.id_alumno}`}
+                      {alumno.matricula ? ` - ${alumno.matricula}` : ""}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
 
             <label className="block">
               <span className="text-sm font-medium text-slate-700">
@@ -583,7 +611,11 @@ export default function BoletaFinal() {
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Search size={18} />
-              {loadingBoleta ? "Consultando..." : "Generar boleta"}
+              {loadingBoleta
+                ? "Consultando..."
+                : modoAlumno
+                  ? "Consultar boleta"
+                  : "Generar boleta"}
             </button>
           </div>
         </section>

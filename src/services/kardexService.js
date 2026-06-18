@@ -24,3 +24,8 @@ export const buscarAlumnosKardex = async (q) => {
   return response.data;
 };
 
+export const obtenerMiKardex = async () => {
+  const response = await api.get("/kardex/me");
+
+  return response.data;
+};
