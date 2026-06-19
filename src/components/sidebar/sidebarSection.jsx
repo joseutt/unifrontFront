@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
-import SidebarItem from "./SidebarItem";
+import SidebarItem from "./sidebarItem";
 
 function SidebarSection({
   section,
